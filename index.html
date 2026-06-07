@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-black select-none">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Nova Scan AI - Sci-Fi Visual Scanner</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brandBlue: '#3b82f6',
+            brandMagenta: '#d946ef',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Laser Scanner Animation */
+    @keyframes scanSweep {
+      0% { top: 0%; opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { top: 100%; opacity: 0.3; }
+    }
+    
+    .scanner-laser {
+      animation: scanSweep 4s infinite ease-in-out;
+    }
+
+    /* Target Reticle Corner Pulse */
+    @keyframes reticlePulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.03); opacity: 1; filter: drop-shadow(0 0 4px #3b82f6); }
+    }
+
+    .reticle-corner {
+      animation: reticlePulse 2s infinite ease-in-out;
+    }
+
+    /* Soft Glows */
+    .glow-blue {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.45);
+    }
+    .glow-magenta {
+      box-shadow: 0 0 20px rgba(217, 70, 239, 0.45);
+    }
+    
+    /* Subtle Background Grid Animation */
+    @keyframes gridShift {
+      0% { background-position: 0 0; }
+      100% { background-position: 24px 24px; }
+    }
+    .grid-bg {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+      animation: gridShift 8s linear infinite;
+    }
+
+    /* Custom Scrollbar for Bottom Sheet */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="h-full text-zinc-100 flex items-center justify-center p-0 sm:p-4 bg-zinc-950">
+
+  <!-- Main Device Container -->
+  <main class="relative w-full h-full max-w-md sm:h-[880px] bg-black sm:rounded-[40px] border-0 sm:border-4 border-zinc-900 shadow-2xl flex flex-col justify-between overflow-hidden">
+    
+    <!-- Top Notch Decorator -->
+    <div class="hidden sm:block absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-6 bg-zinc-900 rounded-b-2xl z-50 flex justify-center items-start">
+      <div class="w-16 h-1 bg-black rounded-full mt-1.5"></div>
+    </div>
+
+    <!-- UI Background Layer -->
+    <div class="absolute inset-0 grid-bg pointer-events-none z-0"></div>
+
+    <!-- Header Section -->
+    <header class="relative z-10 px-6 pt-8 pb-4 flex justify-between items-center bg-gradient-to-b from-black via-black/80 to-transparent">
+      <div class="flex items-center space-x-2">
+        <div class="w-2.5 h-2.5 rounded-full bg-brandMagenta animate-pulse shadow-[0_0_8px_rgba(217,70,239,0.8)]"></div>
+        <h1 class="text-xs font-mono tracking-[0.2em] font-bold uppercase text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-500">
+          Nova Scan AI
+        </h1>
+      </div>
+      <div class="flex items-center space-x-3 text-[10px] font-mono text-zinc-500">
+        <span class="flex items-center gap-1">
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span> SYS OK
+        </span>
+        <span class="border border-zinc-800 px-1.5 py-0.5 rounded text-zinc-400">FPS: 60</span>
+      </div>
+    </header>
+
+    <!-- Main Viewfinder Area -->
+    <section class="relative flex-grow flex items-center justify-center px-6 py-2 z-10 overflow-hidden">
+      
+      <!-- Viewfinder Overlay Outer Frame -->
+      <div class="relative w-full aspect-[4/5] sm:aspect-[3/4] rounded-2xl border border-zinc-900/60 bg-zinc-950/20 backdrop-blur-[2px] overflow-hidden flex flex-col justify-between p-4 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)]">
+        
+        <!-- REAL TIME CAMERA FEED -->
+        <video id="webcam-feed" class="absolute inset-0 w-full h-full object-cover -z-20 hidden" autoplay playsinline muted></video>
+
+        <!-- Live System Readouts (Sci-Fi Hud Details) -->
+        <div class="flex justify-between items-start text-[9px] font-mono text-zinc-500">
+          <div>
+            <div class="text-zinc-400 font-bold tracking-wider">AE-L / AF-S</div>
+            <div>ISO 400 | F1.8</div>
+          </div>
+          <div class="text-right">
+            <div>AUTO-DETECT</div>
+            <div id="status-mode" class="text-brandBlue font-bold">MODE: CHOOSE</div>
+          </div>
+        </div>
+
+        <!-- Animated Target Corners -->
+        <!-- Top Left -->
+        <div class="reticle-corner absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-brandBlue"></div>
+        <!-- Top Right -->
+        <div class="reticle-corner absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-brandBlue"></div>
+        <!-- Bottom Left -->
+        <div class="reticle-corner absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-brandBlue"></div>
+        <!-- Bottom Right -->
+        <div class="reticle-corner absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-brandBlue"></div>
+
+        <!-- Animated Laser Line -->
+        <div class="scanner-laser absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-brandMagenta to-transparent shadow-[0_0_12px_rgba(217,70,239,0.8)]"></div>
+
+        <!-- Centered Target Reticle Circle -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="w-16 h-16 rounded-full border border-dashed border-zinc-800/80 flex items-center justify-center">
+            <div class="w-2 h-2 rounded-full bg-brandBlue/40"></div>
+          </div>
+        </div>
+
+        <!-- Fallback/Subject Sim Visualizer (Only visible when camera is loading or permission is denied) -->
+        <div id="subject-sim" class="absolute inset-0 -z-10 flex items-center justify-center transition-opacity duration-300">
+          <div class="w-full h-full flex items-center justify-center relative overflow-hidden bg-zinc-950">
+            <svg class="w-48 h-48 text-zinc-900/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center w-full px-4">
+              <p id="cam-info-text" class="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-zinc-900/80 px-3 py-1 rounded-full backdrop-blur-sm inline-block">
+                Connecting Camera...
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Simulated Camera Feed Visualizer (Swaps relative to mode) -->
+        <div id="scan-feedback-container" class="absolute inset-0 -z-10 hidden flex-col items-center justify-center p-8 bg-zinc-950/60 backdrop-blur-sm transition-opacity duration-500">
+          <div class="w-24 h-24 rounded-2xl flex items-center justify-center bg-zinc-900 border border-zinc-800 relative overflow-hidden">
+            <!-- Simulated Camera Feed SVG graphics -->
+            <div id="scan-icon-sim" class="text-zinc-300 w-12 h-12"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          </div>
+          <span id="scan-feedback-txt" class="mt-4 font-mono text-xs tracking-wider text-brandBlue animate-pulse">LOCKING TARGET...</span>
+        </div>
+
+        <!-- Bottom Status Indicators -->
+        <div class="flex justify-between items-end text-[9px] font-mono text-zinc-500">
+          <div>
+            <div>ZOOM: <span class="text-zinc-300">1.0X</span></div>
+            <div>SYS: 0x98A</div>
+          </div>
+          <div class="text-right">
+            <div>RANGE: <span class="text-zinc-300">0.82m</span></div>
+            <div class="text-zinc-400">AUTO SHUTTER</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Action Dashboard / Mode Selector -->
+    <section class="relative z-10 px-6 py-4 flex flex-col items-center space-y-4">
+      <div class="text-[10px] font-mono uppercase tracking-widest text-zinc-500">Choose Analysis Pipeline</div>
+      
+      <div class="flex items-center justify-center gap-5 w-full">
+        
+        <!-- Button: Homework/Math -->
+        <button onclick="triggerScan('homework', this)" class="mode-btn group flex flex-col items-center justify-center transition-all duration-300 focus:outline-none">
+          <div class="w-14 h-14 rounded-full border border-zinc-800 bg-zinc-950 flex items-center justify-center text-zinc-400 group-hover:text-brandBlue group-hover:border-brandBlue transition-all duration-300">
+            <!-- Pi/Math Icon -->
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <span class="mt-2 text-[10px] font-mono tracking-wide text-zinc-500 group-hover:text-zinc-300 transition-all">MATH / HW</span>
+        </button>
+
+        <!-- Button: Identify Object -->
+        <button onclick="triggerScan('object', this)" class="mode-btn group flex flex-col items-center justify-center transition-all duration-300 focus:outline-none">
+          <div class="w-16 h-16 rounded-full border-2 border-brandBlue glow-blue bg-zinc-950 flex items-center justify-center text-brandBlue transition-all duration-300">
+            <!-- Box/Object Target Icon -->
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+            </svg>
+          </div>
+          <span class="mt-2 text-[10px] font-mono tracking-wide text-zinc-300">FIND OBJECT</span>
+        </button>
+
+        <!-- Button: Plant/Nature -->
+        <button onclick="triggerScan('plant', this)" class="mode-btn group flex flex-col items-center justify-center transition-all duration-300 focus:outline-none">
+          <div class="w-14 h-14 rounded-full border border-zinc-800 bg-zinc-950 flex items-center justify-center text-zinc-400 group-hover:text-brandMagenta group-hover:border-brandMagenta transition-all duration-300">
+            <!-- Leaf/Nature Icon -->
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span class="mt-2 text-[10px] font-mono tracking-wide text-zinc-500 group-hover:text-zinc-300 transition-all">NATURE</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Monetization / Start.io Sponsor Slot -->
+    <section class="relative z-10 px-6 pb-6 pt-2">
+      <div class="w-full bg-zinc-950 border border-zinc-900 rounded-xl py-2.5 px-4 flex items-center justify-between text-zinc-500">
+        <div class="flex items-center space-x-2">
+          <span class="bg-zinc-900 border border-zinc-800 text-[8px] font-bold px-1 py-0.5 rounded text-zinc-400 uppercase tracking-wider">Ad</span>
+          <span class="text-[10px] font-mono tracking-tight text-zinc-400">Discover premium offers nearby</span>
+        </div>
+        <div class="text-[9px] font-mono text-brandBlue hover:underline cursor-pointer">Learn More</div>
+      </div>
+    </section>
+
+    <!-- Slide-Up Result Modal Sheet -->
+    <div id="result-modal" class="absolute bottom-0 left-0 right-0 h-[70%] bg-zinc-950 border-t border-zinc-800/80 rounded-t-[32px] transform translate-y-full transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-40 flex flex-col shadow-[0_-15px_30px_rgba(0,0,0,0.8)]">
+      
+      <!-- Drag / Pull handle visual line -->
+      <div class="w-full flex justify-center py-3 cursor-pointer" onclick="closeModal()">
+        <div class="w-12 h-1 bg-zinc-800 rounded-full hover:bg-zinc-600 transition-colors"></div>
+      </div>
+
+      <!-- Header of the modal -->
+      <div class="px-6 pb-3 border-b border-zinc-900 flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-mono uppercase text-brandMagenta tracking-widest">Analysis Matrix Response</span>
+          <h2 id="modal-title" class="text-lg font-bold text-zinc-100 tracking-tight mt-0.5">Scanned Target Details</h2>
+        </div>
+        <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 flex items-center justify-center transition-colors">
+          &times;
+        </button>
+      </div>
+
+      <!-- Content Scrollable Body -->
+      <div class="flex-grow overflow-y-auto px-6 py-4 custom-scrollbar text-sm space-y-4">
+        
+        <!-- Summary Cards / Sections -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-zinc-900/60 border border-zinc-900/80 p-3 rounded-xl flex flex-col">
+            <span class="text-[9px] font-mono text-zinc-500 uppercase">Detection Accuracy</span>
+            <span id="accuracy-rate" class="text-sm font-bold text-emerald-400 tracking-wider font-mono mt-0.5">98.4%</span>
+          </div>
+          <div class="bg-zinc-900/60 border border-zinc-900/80 p-3 rounded-xl flex flex-col">
+            <span class="text-[9px] font-mono text-zinc-500 uppercase">Engine Processing Time</span>
+            <span id="proc-speed" class="text-sm font-bold text-brandBlue tracking-wider font-mono mt-0.5">142ms</span>
+          </div>
+        </div>
+
+        <!-- AI Core Analysis Response -->
+        <div class="bg-zinc-900/30 border border-zinc-900/60 p-4 rounded-xl space-y-3">
+          <div class="flex items-center space-x-2 text-zinc-400 font-medium">
+            <svg class="w-4 h-4 text-brandMagenta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span class="text-xs font-mono uppercase tracking-wider text-zinc-300">Nova Intelligence Dispatch</span>
+          </div>
+          
+          <div id="ai-structured-response" class="space-y-4 text-zinc-300 font-sans leading-relaxed text-xs sm:text-sm">
+            <!-- Dynamically injected analysis layout from JS -->
+          </div>
+        </div>
+
+        <!-- Quick AI action buttons inside the result view -->
+        <div class="flex gap-2 pt-2">
+          <button class="flex-1 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-200 text-xs py-2.5 rounded-xl font-medium tracking-wide transition-all duration-200">
+            Export Data
+          </button>
+          <button class="flex-1 bg-gradient-to-r from-brandBlue to-brandMagenta hover:opacity-90 text-white text-xs py-2.5 rounded-xl font-semibold tracking-wide shadow-lg transition-all duration-200">
+            Copy Solution
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // Real Camera Stream Handling
+    async function startCameraStream() {
+      const video = document.getElementById('webcam-feed');
+      const fallback = document.getElementById('subject-sim');
+      const camInfo = document.getElementById('cam-info-text');
+      const statusMode = document.getElementById('status-mode');
+
+      try {
+        // Request back-facing (environment) camera with standard fallback settings
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { 
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+
+        video.srcObject = stream;
+        video.classList.remove('hidden');
+        if (fallback) fallback.classList.add('opacity-0', 'pointer-events-none');
+        statusMode.textContent = "SYS: CAM LIVE";
+        statusMode.classList.remove('text-brandBlue');
+        statusMode.classList.add('text-emerald-400');
+      } catch (err) {
+        console.error("Camera connection failed:", err);
+        // Show simulated UI alert
+        camInfo.textContent = "Permission / HTTPS Required";
+        camInfo.classList.add('text-red-400');
+        statusMode.textContent = "SYS: MOCK CAM";
+        statusMode.classList.remove('text-brandBlue');
+        statusMode.classList.add('text-amber-500');
+      }
+    }
+
+    // Run camera initialization on load
+    window.addEventListener('DOMContentLoaded', startCameraStream);
+
+    // Mock Data Store representing scanning modes and dynamic payloads
+    const SCAN_DATABASE = {
+      homework: {
+        title: "Calculus Formula Solved",
+        icon: `<svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>`,
+        accuracy: "99.8%",
+        speed: "84ms",
+        status: "MODE: MATH",
+        content: `
+          <div class="space-y-3">
+            <div class="bg-black/50 p-3 rounded-lg border border-zinc-800 font-mono text-brandBlue text-center">
+              f(x) = x&sup2; &middot; ln(x) &nbsp;&rArr;&nbsp; f'(x) = ?
+            </div>
+            <div>
+              <p class="font-semibold text-zinc-200">Mathematical Solution:</p>
+              <p class="text-zinc-400 mt-1">To solve for the derivative of <span class="font-mono text-zinc-300">f(x)</span>, we apply the <strong>Product Rule</strong> formula:</p>
+              <div class="font-mono bg-black/30 p-2 rounded border border-zinc-900 text-xs mt-1 text-zinc-300">
+                (u &middot; v)' = u' &middot; v + u &middot; v'
+              </div>
+            </div>
+            <div class="space-y-2 mt-2">
+              <p class="font-semibold text-zinc-200">Step-by-Step Breakdown:</p>
+              <ol class="list-decimal pl-5 space-y-1 text-zinc-400">
+                <li>Identify key components: <span class="font-mono text-zinc-300">u = x&sup2;</span>, <span class="font-mono text-zinc-300">v = ln(x)</span>.</li>
+                <li>Calculate derivatives: <span class="font-mono text-zinc-300">u' = 2x</span> and <span class="font-mono text-zinc-300">v' = 1/x</span>.</li>
+                <li>Assemble elements: <span class="font-mono text-zinc-300">(2x)(ln(x)) + (x&sup2;)(1/x)</span>.</li>
+                <li>Simplify term results: <span class="font-mono text-zinc-300">2x &middot; ln(x) + x</span>.</li>
+              </ol>
+            </div>
+         
