@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Smart Test</title>
+    <title>Premium Direct Test</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         .glass-card {
@@ -17,12 +17,10 @@
 
     <header class="p-5 border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md">
         <div class="max-w-md mx-auto flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-600 to-cyan-400 animate-pulse flex items-center justify-center font-bold text-lg shadow-lg shadow-violet-500/20">
-                AI
-            </div>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-600 to-cyan-400 flex items-center justify-center font-bold text-lg shadow-lg">AI</div>
             <div>
-                <h1 class="text-md font-bold tracking-wide bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">MONIR ON WHEELS</h1>
-                <p class="text-[10px] text-cyan-400 font-semibold tracking-widest uppercase">Smart UI Test</p>
+                <h1 class="text-md font-bold tracking-wide">MONIR ON WHEELS</h1>
+                <p class="text-[10px] text-cyan-400 font-semibold tracking-widest uppercase">Direct UI Test</p>
             </div>
         </div>
     </header>
@@ -30,58 +28,29 @@
     <main class="p-6 flex-1 flex flex-col justify-center max-w-md mx-auto w-full space-y-5">
         
         <div class="glass-card p-5 rounded-2xl text-center shadow-xl">
-            <h2 class="text-lg font-bold text-slate-100 mb-1">Simple Reference Test</h2>
+            <h2 class="text-lg font-bold text-slate-100 mb-1">Direct Section Test</h2>
             <p class="text-xs text-slate-400">বাটনে ক্লিক করে অ্যাপের সেকশন চেক করুন।</p>
         </div>
 
-        <a href="1" class="app-btn group block glass-card p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-gradient-to-r hover:from-violet-900/30 hover:to-slate-800/50">
+        <a href="action:section:1" class="block glass-card p-4 rounded-xl bg-gradient-to-r hover:from-violet-900/30 hover:to-slate-800/50">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-lg text-violet-400">💬</div>
-                    <span class="font-bold text-slate-200 group-hover:text-violet-400 transition-colors">Button Section 1</span>
-                </div>
-                <span class="text-slate-500 group-hover:text-violet-400 transition-transform group-hover:translate-x-1">➔</span>
+                <span class="font-bold text-slate-200">Button Section 1</span>
+                <span class="text-violet-400">➔</span>
             </div>
         </a>
 
-        <a href="2" class="app-btn group block glass-card p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-gradient-to-r hover:from-cyan-900/30 hover:to-slate-800/50">
+        <a href="action:section:2" class="block glass-card p-4 rounded-xl bg-gradient-to-r hover:from-cyan-900/30 hover:to-slate-800/50">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-lg text-cyan-400">📁</div>
-                    <span class="font-bold text-slate-200 group-hover:text-cyan-400 transition-colors">Button Section 2</span>
-                </div>
-                <span class="text-slate-500 group-hover:text-cyan-400 transition-transform group-hover:translate-x-1">➔</span>
-            </div>
-        </a>
-
-        <a href="3" class="app-btn group block glass-card p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-95 bg-gradient-to-r hover:from-emerald-900/30 hover:to-slate-800/50">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-lg text-emerald-400">⚙️</div>
-                    <span class="font-bold text-slate-200 group-hover:text-emerald-400 transition-colors">Button Section 3</span>
-                </div>
-                <span class="text-slate-500 group-hover:text-emerald-400 transition-transform group-hover:translate-x-1">➔</span>
+                <span class="font-bold text-slate-200">Button Section 2</span>
+                <span class="text-cyan-400">➔</span>
             </div>
         </a>
 
     </main>
 
-    <footer class="w-full p-4 text-center text-[10px] text-slate-600 tracking-wider">
+    <footer class="w-full p-4 text-center text-[10px] text-slate-600">
         POWERED BY GITHUB & APPCREATOR24
     </footer>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const buttons = document.querySelectorAll('.app-btn');
-            buttons.forEach(btn => {
-                const simpleRef = btn.getAttribute('href');
-                // চেক করছে রিফটি শুধু নম্বর কি না, তাহলে অ্যাপ ক্রিয়েটরের কমান্ডে বদলে দেবে
-                if (!simpleRef.startsWith('http') && !simpleRef.startsWith('action:')) {
-                    btn.setAttribute('href', `action:section:${simpleRef}`);
-                }
-            });
-        });
-    </script>
 
 </body>
 </html>
