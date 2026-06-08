@@ -1,384 +1,291 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-black select-none">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Nova Scan AI - Sci-Fi Visual Scanner</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts: Inter & JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            brandBlue: '#3b82f6',
-            brandMagenta: '#d946ef',
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Smart Camera</title>
+    <!-- Tailwind CSS (স্টাইলিংয়ের জন্য) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- TensorFlow.js এবং COCO-SSD (AI অবজেক্ট ডিটেকশনের জন্য) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+    <style>
+        /* লোডিং স্পিনারের জন্য কাস্টম অ্যানিমেশন */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #10B981;
+            animation: spin 1s linear infinite;
         }
-      }
-    }
-  </script>
-
-  <style>
-    /* Laser Scanner Animation */
-    @keyframes scanSweep {
-      0% { top: 0%; opacity: 0.3; }
-      50% { opacity: 1; }
-      100% { top: 100%; opacity: 0.3; }
-    }
-    
-    .scanner-laser {
-      animation: scanSweep 4s infinite ease-in-out;
-    }
-
-    /* Target Reticle Corner Pulse */
-    @keyframes reticlePulse {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.03); opacity: 1; filter: drop-shadow(0 0 4px #3b82f6); }
-    }
-
-    .reticle-corner {
-      animation: reticlePulse 2s infinite ease-in-out;
-    }
-
-    /* Soft Glows */
-    .glow-blue {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.45);
-    }
-    .glow-magenta {
-      box-shadow: 0 0 20px rgba(217, 70, 239, 0.45);
-    }
-    
-    /* Subtle Background Grid Animation */
-    @keyframes gridShift {
-      0% { background-position: 0 0; }
-      100% { background-position: 24px 24px; }
-    }
-    .grid-bg {
-      background-size: 24px 24px;
-      background-image: 
-        linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
-      animation: gridShift 8s linear infinite;
-    }
-
-    /* Custom Scrollbar for Bottom Sheet */
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #27272a;
-      border-radius: 9999px;
-    }
-  </style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="h-full text-zinc-100 flex items-center justify-center p-0 sm:p-4 bg-zinc-950">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between p-4 font-sans selection:bg-emerald-500 selection:text-white">
 
-  <!-- Main Device Container -->
-  <main class="relative w-full h-full max-w-md sm:h-[880px] bg-black sm:rounded-[40px] border-0 sm:border-4 border-zinc-900 shadow-2xl flex flex-col justify-between overflow-hidden">
-    
-    <!-- Top Notch Decorator -->
-    <div class="hidden sm:block absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-6 bg-zinc-900 rounded-b-2xl z-50 flex justify-center items-start">
-      <div class="w-16 h-1 bg-black rounded-full mt-1.5"></div>
-    </div>
-
-    <!-- UI Background Layer -->
-    <div class="absolute inset-0 grid-bg pointer-events-none z-0"></div>
-
-    <!-- Header Section -->
-    <header class="relative z-10 px-6 pt-8 pb-4 flex justify-between items-center bg-gradient-to-b from-black via-black/80 to-transparent">
-      <div class="flex items-center space-x-2">
-        <div class="w-2.5 h-2.5 rounded-full bg-brandMagenta animate-pulse shadow-[0_0_8px_rgba(217,70,239,0.8)]"></div>
-        <h1 class="text-xs font-mono tracking-[0.2em] font-bold uppercase text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-500">
-          Nova Scan AI
+    <!-- হেডার সেকশন -->
+    <header class="text-center py-4">
+        <h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">
+            AI Smart Camera App
         </h1>
-      </div>
-      <div class="flex items-center space-x-3 text-[10px] font-mono text-zinc-500">
-        <span class="flex items-center gap-1">
-          <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span> SYS OK
-        </span>
-        <span class="border border-zinc-800 px-1.5 py-0.5 rounded text-zinc-400">FPS: 60</span>
-      </div>
+        <p class="text-slate-400 text-xs md:text-sm mt-1" id="status-text">ক্যামেরা চালু করা হচ্ছে...</p>
     </header>
 
-    <!-- Main Viewfinder Area -->
-    <section class="relative flex-grow flex items-center justify-center px-6 py-2 z-10 overflow-hidden">
-      
-      <!-- Viewfinder Overlay Outer Frame -->
-      <div class="relative w-full aspect-[4/5] sm:aspect-[3/4] rounded-2xl border border-zinc-900/60 bg-zinc-950/20 backdrop-blur-[2px] overflow-hidden flex flex-col justify-between p-4 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)]">
+    <!-- মেইন ক্যামেরা ভিউপোর্ট -->
+    <main class="flex-grow flex flex-col items-center justify-center max-w-lg mx-auto w-full relative">
         
-        <!-- REAL TIME CAMERA FEED -->
-        <video id="webcam-feed" class="absolute inset-0 w-full h-full object-cover -z-20 hidden" autoplay playsinline muted></video>
+        <!-- ক্যামেরা এবং ক্যানভাস কন্টেইনার -->
+        <div class="relative w-full aspect-[4/3] bg-black rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-800">
+            <!-- ভিডিও এলিমেন্ট (ক্যামেরার ফিড দেখাবে) -->
+            <video id="webcam" autoplay playsinline muted class="absolute top-0 left-0 w-full h-full object-cover"></video>
+            
+            <!-- ক্যানভাস এলিমেন্ট (AI ডিটেকশন বক্স দেখানোর জন্য) -->
+            <canvas id="canvas" class="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"></canvas>
 
-        <!-- Live System Readouts (Sci-Fi Hud Details) -->
-        <div class="flex justify-between items-start text-[9px] font-mono text-zinc-500">
-          <div>
-            <div class="text-zinc-400 font-bold tracking-wider">AE-L / AF-S</div>
-            <div>ISO 400 | F1.8</div>
-          </div>
-          <div class="text-right">
-            <div>AUTO-DETECT</div>
-            <div id="status-mode" class="text-brandBlue font-bold">MODE: CHOOSE</div>
-          </div>
-        </div>
-
-        <!-- Animated Target Corners -->
-        <!-- Top Left -->
-        <div class="reticle-corner absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-brandBlue"></div>
-        <!-- Top Right -->
-        <div class="reticle-corner absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-brandBlue"></div>
-        <!-- Bottom Left -->
-        <div class="reticle-corner absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-brandBlue"></div>
-        <!-- Bottom Right -->
-        <div class="reticle-corner absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-brandBlue"></div>
-
-        <!-- Animated Laser Line -->
-        <div class="scanner-laser absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-brandMagenta to-transparent shadow-[0_0_12px_rgba(217,70,239,0.8)]"></div>
-
-        <!-- Centered Target Reticle Circle -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div class="w-16 h-16 rounded-full border border-dashed border-zinc-800/80 flex items-center justify-center">
-            <div class="w-2 h-2 rounded-full bg-brandBlue/40"></div>
-          </div>
-        </div>
-
-        <!-- Fallback/Subject Sim Visualizer (Only visible when camera is loading or permission is denied) -->
-        <div id="subject-sim" class="absolute inset-0 -z-10 flex items-center justify-center transition-opacity duration-300">
-          <div class="w-full h-full flex items-center justify-center relative overflow-hidden bg-zinc-950">
-            <svg class="w-48 h-48 text-zinc-900/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center w-full px-4">
-              <p id="cam-info-text" class="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-zinc-900/80 px-3 py-1 rounded-full backdrop-blur-sm inline-block">
-                Connecting Camera...
-              </p>
+            <!-- AI মডেল লোডিং ওভারলে -->
+            <div id="loading-overlay" class="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center z-10 transition-opacity duration-500">
+                <div class="spinner mb-4"></div>
+                <p class="text-sm font-semibold text-emerald-400">AI মডেল লোড হচ্ছে...</p>
+                <p class="text-xs text-slate-500 mt-1">প্রথমবার কিছুটা সময় লাগতে পারে</p>
             </div>
-          </div>
         </div>
 
-        <!-- Dynamic Simulated Camera Feed Visualizer (Swaps relative to mode) -->
-        <div id="scan-feedback-container" class="absolute inset-0 -z-10 hidden flex-col items-center justify-center p-8 bg-zinc-950/60 backdrop-blur-sm transition-opacity duration-500">
-          <div class="w-24 h-24 rounded-2xl flex items-center justify-center bg-zinc-900 border border-zinc-800 relative overflow-hidden">
-            <!-- Simulated Camera Feed SVG graphics -->
-            <div id="scan-icon-sim" class="text-zinc-300 w-12 h-12"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-          </div>
-          <span id="scan-feedback-txt" class="mt-4 font-mono text-xs tracking-wider text-brandBlue animate-pulse">LOCKING TARGET...</span>
+        <!-- সনাক্তকৃত বস্তুর তালিকা -->
+        <div class="w-full mt-4 bg-slate-800/50 backdrop-blur-md rounded-xl p-3 border border-slate-700/50 min-h-[50px] flex flex-wrap items-center justify-center gap-2">
+            <span class="text-xs text-slate-400 w-full text-center block mb-1">সনাক্তকৃত বস্তুসমূহ:</span>
+            <div id="detected-list" class="flex flex-wrap gap-2 justify-center w-full">
+                <span class="text-xs text-slate-500">কোন বস্তু সনাক্ত হয়নি</span>
+            </div>
         </div>
 
-        <!-- Bottom Status Indicators -->
-        <div class="flex justify-between items-end text-[9px] font-mono text-zinc-500">
-          <div>
-            <div>ZOOM: <span class="text-zinc-300">1.0X</span></div>
-            <div>SYS: 0x98A</div>
-          </div>
-          <div class="text-right">
-            <div>RANGE: <span class="text-zinc-300">0.82m</span></div>
-            <div class="text-zinc-400">AUTO SHUTTER</div>
-          </div>
-        </div>
+    </main>
 
-      </div>
-    </section>
-
-    <!-- Action Dashboard / Mode Selector -->
-    <section class="relative z-10 px-6 py-4 flex flex-col items-center space-y-4">
-      <div class="text-[10px] font-mono uppercase tracking-widest text-zinc-500">Choose Analysis Pipeline</div>
-      
-      <div class="flex items-center justify-center gap-5 w-full">
+    <!-- কন্ট্রোল বাটন সমূহ -->
+    <footer class="max-w-lg mx-auto w-full py-4 mt-4 grid grid-cols-3 gap-2">
         
-        <!-- Button: Homework/Math -->
-        <button onclick="triggerScan('homework', this)" class="mode-btn group flex flex-col items-center justify-center transition-all duration-300 focus:outline-none">
-          <div class="w-14 h-14 rounded-full border border-zinc-800 bg-zinc-950 flex items-center justify-center text-zinc-400 group-hover:text-brandBlue group-hover:border-brandBlue transition-all duration-300">
-            <!-- Pi/Math Icon -->
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        <!-- ক্যামেরা পরিবর্তনের বাটন (সামনে/পেছনে) -->
+        <button id="switch-cam-btn" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-white py-3 px-2 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-1 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 6H16" />
             </svg>
-          </div>
-          <span class="mt-2 text-[10px] font-mono tracking-wide text-zinc-500 group-hover:text-zinc-300 transition-all">MATH / HW</span>
+            <span class="text-[10px] font-semibold">ক্যামেরা বদল</span>
         </button>
 
-        <!-- Button: Identify Object -->
-        <button onclick="triggerScan('object', this)" class="mode-btn group flex flex-col items-center justify-center transition-all duration-300 focus:outline-none">
-          <div class="w-16 h-16 rounded-full border-2 border-brandBlue glow-blue bg-zinc-950 flex items-center justify-center text-brandBlue transition-all duration-300">
-            <!-- Box/Object Target Icon -->
-            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+        <!-- ছবি তোলার বাটন (AI বক্স সহ ছবি সেভ হবে) -->
+        <button id="capture-btn" class="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition-all shadow-lg shadow-emerald-900/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-          </div>
-          <span class="mt-2 text-[10px] font-mono tracking-wide text-zinc-300">FIND OBJECT</span>
+            <span class="text-[10px] font-semibold">ছবি তুলুন</span>
         </button>
 
-        <!-- Button: Plant/Nature -->
-        <button onclick="triggerScan('plant', this)" class="mode-btn group flex flex-col items-center justify-center transition-all duration-300 focus:outline-none">
-          <div class="w-14 h-14 rounded-full border border-zinc-800 bg-zinc-950 flex items-center justify-center text-zinc-400 group-hover:text-brandMagenta group-hover:border-brandMagenta transition-all duration-300">
-            <!-- Leaf/Nature Icon -->
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <!-- AI অন/অফ বাটন -->
+        <button id="ai-toggle-btn" class="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white py-3 px-2 rounded-xl flex flex-col items-center justify-center gap-1 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
-          </div>
-          <span class="mt-2 text-[10px] font-mono tracking-wide text-zinc-500 group-hover:text-zinc-300 transition-all">NATURE</span>
+            <span id="ai-btn-text" class="text-[10px] font-semibold">AI বন্ধ করুন</span>
         </button>
 
-      </div>
-    </section>
+    </footer>
 
-    <!-- Monetization / Start.io Sponsor Slot -->
-    <section class="relative z-10 px-6 pb-6 pt-2">
-      <div class="w-full bg-zinc-950 border border-zinc-900 rounded-xl py-2.5 px-4 flex items-center justify-between text-zinc-500">
-        <div class="flex items-center space-x-2">
-          <span class="bg-zinc-900 border border-zinc-800 text-[8px] font-bold px-1 py-0.5 rounded text-zinc-400 uppercase tracking-wider">Ad</span>
-          <span class="text-[10px] font-mono tracking-tight text-zinc-400">Discover premium offers nearby</span>
-        </div>
-        <div class="text-[9px] font-mono text-brandBlue hover:underline cursor-pointer">Learn More</div>
-      </div>
-    </section>
+    <!-- স্ক্রিপ্ট সেকশন -->
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const statusText = document.getElementById('status-text');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const detectedList = document.getElementById('detected-list');
+        const switchCamBtn = document.getElementById('switch-cam-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const aiToggleBtn = document.getElementById('ai-toggle-btn');
+        const aiBtnText = document.getElementById('ai-btn-text');
 
-    <!-- Slide-Up Result Modal Sheet -->
-    <div id="result-modal" class="absolute bottom-0 left-0 right-0 h-[70%] bg-zinc-950 border-t border-zinc-800/80 rounded-t-[32px] transform translate-y-full transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-40 flex flex-col shadow-[0_-15px_30px_rgba(0,0,0,0.8)]">
-      
-      <!-- Drag / Pull handle visual line -->
-      <div class="w-full flex justify-center py-3 cursor-pointer" onclick="closeModal()">
-        <div class="w-12 h-1 bg-zinc-800 rounded-full hover:bg-zinc-600 transition-colors"></div>
-      </div>
+        let model = null;
+        let currentFacingMode = 'environment'; // পেছনের ক্যামেরা ডিফোল্ট হিসেবে রাখা হয়েছে (মোবাইলের জন্য উপযোগী)
+        let localStream = null;
+        let isAiActive = true;
+        let latestPredictions = [];
+        let isDetecting = false;
 
-      <!-- Header of the modal -->
-      <div class="px-6 pb-3 border-b border-zinc-900 flex justify-between items-center">
-        <div>
-          <span class="text-[10px] font-mono uppercase text-brandMagenta tracking-widest">Analysis Matrix Response</span>
-          <h2 id="modal-title" class="text-lg font-bold text-zinc-100 tracking-tight mt-0.5">Scanned Target Details</h2>
-        </div>
-        <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 flex items-center justify-center transition-colors">
-          &times;
-        </button>
-      </div>
+        // ক্যামেরা চালু করার ফাংশন
+        async function startWebcam() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
 
-      <!-- Content Scrollable Body -->
-      <div class="flex-grow overflow-y-auto px-6 py-4 custom-scrollbar text-sm space-y-4">
-        
-        <!-- Summary Cards / Sections -->
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-zinc-900/60 border border-zinc-900/80 p-3 rounded-xl flex flex-col">
-            <span class="text-[9px] font-mono text-zinc-500 uppercase">Detection Accuracy</span>
-            <span id="accuracy-rate" class="text-sm font-bold text-emerald-400 tracking-wider font-mono mt-0.5">98.4%</span>
-          </div>
-          <div class="bg-zinc-900/60 border border-zinc-900/80 p-3 rounded-xl flex flex-col">
-            <span class="text-[9px] font-mono text-zinc-500 uppercase">Engine Processing Time</span>
-            <span id="proc-speed" class="text-sm font-bold text-brandBlue tracking-wider font-mono mt-0.5">142ms</span>
-          </div>
-        </div>
+            const constraints = {
+                video: { facingMode: currentFacingMode },
+                audio: false
+            };
 
-        <!-- AI Core Analysis Response -->
-        <div class="bg-zinc-900/30 border border-zinc-900/60 p-4 rounded-xl space-y-3">
-          <div class="flex items-center space-x-2 text-zinc-400 font-medium">
-            <svg class="w-4 h-4 text-brandMagenta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            <span class="text-xs font-mono uppercase tracking-wider text-zinc-300">Nova Intelligence Dispatch</span>
-          </div>
-          
-          <div id="ai-structured-response" class="space-y-4 text-zinc-300 font-sans leading-relaxed text-xs sm:text-sm">
-            <!-- Dynamically injected analysis layout from JS -->
-          </div>
-        </div>
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = localStream;
+                statusText.innerText = "ক্যামেরা প্রস্তুত। AI মডেল লোড হওয়া পর্যন্ত অপেক্ষা করুন...";
+            } catch (err) {
+                console.error("Camera access error:", err);
+                statusText.innerText = "ক্যামেরা অ্যাক্সেস করা যায়নি। পারমিশন চেক করুন।";
+                alert("ক্যামেরা ব্যবহারের অনুমতি প্রয়োজন। অনুগ্রহ করে ক্যামেরা পারমিশন চেক করুন।");
+            }
+        }
 
-        <!-- Quick AI action buttons inside the result view -->
-        <div class="flex gap-2 pt-2">
-          <button class="flex-1 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-200 text-xs py-2.5 rounded-xl font-medium tracking-wide transition-all duration-200">
-            Export Data
-          </button>
-          <button class="flex-1 bg-gradient-to-r from-brandBlue to-brandMagenta hover:opacity-90 text-white text-xs py-2.5 rounded-xl font-semibold tracking-wide shadow-lg transition-all duration-200">
-            Copy Solution
-          </button>
-        </div>
+        // ক্যানভাসের সাইজ ভিডিওর সাথে সমন্বয় করা
+        function adjustCanvasSize() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+        }
 
-      </div>
+        // AI মডেল লোড করার ফাংশن
+        async function loadAIModel() {
+            try {
+                model = await cocoSsd.load();
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => loadingOverlay.style.display = 'none', 500);
+                statusText.innerText = "AI ক্যামেরা চালু রয়েছে";
+                detectionLoop();
+            } catch (error) {
+                console.error("Model load error:", error);
+                statusText.innerText = "AI মডেল লোড করতে সমস্যা হয়েছে।";
+                alert("AI মডেল ডাউনলোডে সমস্যা হয়েছে। ইন্টারনেট কানেকশন চেক করে আবার চেষ্টা করুন।");
+            }
+        }
 
-    </div>
+        // AI ডিটেকশন লুপ
+        async function detectionLoop() {
+            if (!model || !isAiActive) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                setTimeout(detectionLoop, 200);
+                return;
+            }
 
-  </main>
+            if (video.readyState === video.HAVE_ENOUGH_DATA && !isDetecting) {
+                isDetecting = true;
+                try {
+                    const predictions = await model.detect(video);
+                    latestPredictions = predictions; // গ্লোবাল ভেরিয়েবলে সংরক্ষণ (ছবি তোলার জন্য)
 
-  <script>
-    // Real Camera Stream Handling
-    async function startCameraStream() {
-      const video = document.getElementById('webcam-feed');
-      const fallback = document.getElementById('subject-sim');
-      const camInfo = document.getElementById('cam-info-text');
-      const statusMode = document.getElementById('status-mode');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    updateDetectedList(predictions);
 
-      try {
-        // Request back-facing (environment) camera with standard fallback settings
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { 
-            facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          },
-          audio: false
+                    // ডিটেকশন বক্স ও লেবেল অঙ্কন করা
+                    predictions.forEach(prediction => {
+                        const [x, y, width, height] = prediction.bbox;
+
+                        // বক্স আঁকা
+                        ctx.strokeStyle = '#10B981';
+                        ctx.lineWidth = 4;
+                        ctx.strokeRect(x, y, width, height);
+
+                        // লেবেলের ব্যাকগ্রাউন্ড
+                        ctx.fillStyle = '#10B981';
+                        ctx.font = 'bold 16px sans-serif';
+                        const text = `${prediction.class} (${Math.round(prediction.score * 100)}%)`;
+                        const textWidth = ctx.measureText(text).width;
+                        ctx.fillRect(x, y - 26, textWidth + 14, 26);
+
+                        // লেবেলের টেক্সট
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillText(text, x + 7, y - 8);
+                    });
+                } catch (e) {
+                    console.error("Detection process error:", e);
+                }
+                isDetecting = false;
+            }
+            requestAnimationFrame(detectionLoop);
+        }
+
+        // UI-তে সনাক্তকৃত বস্তুর তালিকা আপডেট করা
+        function updateDetectedList(predictions) {
+            detectedList.innerHTML = '';
+            if (predictions.length === 0) {
+                detectedList.innerHTML = '<span class="text-xs text-slate-500">কোন বস্তু সনাক্ত হয়নি</span>';
+                return;
+            }
+            predictions.forEach(p => {
+                const name = p.class;
+                const score = Math.round(p.score * 100);
+                detectedList.innerHTML += `
+                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-semibold">
+                        ${name} (${score}%)
+                    </span>
+                `;
+            });
+        }
+
+        // ক্যামেরা পরিবর্তন করার ইভেন্ট
+        switchCamBtn.addEventListener('click', async () => {
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            await startWebcam();
         });
 
-        video.srcObject = stream;
-        video.classList.remove('hidden');
-        if (fallback) fallback.classList.add('opacity-0', 'pointer-events-none');
-        statusMode.textContent = "SYS: CAM LIVE";
-        statusMode.classList.remove('text-brandBlue');
-        statusMode.classList.add('text-emerald-400');
-      } catch (err) {
-        console.error("Camera connection failed:", err);
-        // Show simulated UI alert
-        camInfo.textContent = "Permission / HTTPS Required";
-        camInfo.classList.add('text-red-400');
-        statusMode.textContent = "SYS: MOCK CAM";
-        statusMode.classList.remove('text-brandBlue');
-        statusMode.classList.add('text-amber-500');
-      }
-    }
+        // AI অন/অফ করার ইভেন্ট
+        aiToggleBtn.addEventListener('click', () => {
+            isAiActive = !isAiActive;
+            if (isAiActive) {
+                aiBtnText.innerText = "AI বন্ধ করুন";
+                aiToggleBtn.classList.replace('bg-slate-700', 'bg-emerald-600');
+                statusText.innerText = "AI ক্যামেরা চালু রয়েছে";
+            } else {
+                aiBtnText.innerText = "AI চালু করুন";
+                aiToggleBtn.classList.replace('bg-emerald-600', 'bg-slate-700');
+                statusText.innerText = "সাধারণ ক্যামেরা চালু রয়েছে (AI বন্ধ)";
+                detectedList.innerHTML = '<span class="text-xs text-slate-500">এআই বন্ধ রয়েছে</span>';
+            }
+        });
 
-    // Run camera initialization on load
-    window.addEventListener('DOMContentLoaded', startCameraStream);
+        // AI ওভারলে সহ ছবি তুলে ডাউনলোড করার ইভেন্ট
+        captureBtn.addEventListener('click', () => {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = video.videoWidth;
+            tempCanvas.height = video.videoHeight;
+            const tempCtx = tempCanvas.getContext('2d');
 
-    // Mock Data Store representing scanning modes and dynamic payloads
-    const SCAN_DATABASE = {
-      homework: {
-        title: "Calculus Formula Solved",
-        icon: `<svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>`,
-        accuracy: "99.8%",
-        speed: "84ms",
-        status: "MODE: MATH",
-        content: `
-          <div class="space-y-3">
-            <div class="bg-black/50 p-3 rounded-lg border border-zinc-800 font-mono text-brandBlue text-center">
-              f(x) = x&sup2; &middot; ln(x) &nbsp;&rArr;&nbsp; f'(x) = ?
-            </div>
-            <div>
-              <p class="font-semibold text-zinc-200">Mathematical Solution:</p>
-              <p class="text-zinc-400 mt-1">To solve for the derivative of <span class="font-mono text-zinc-300">f(x)</span>, we apply the <strong>Product Rule</strong> formula:</p>
-              <div class="font-mono bg-black/30 p-2 rounded border border-zinc-900 text-xs mt-1 text-zinc-300">
-                (u &middot; v)' = u' &middot; v + u &middot; v'
-              </div>
-            </div>
-            <div class="space-y-2 mt-2">
-              <p class="font-semibold text-zinc-200">Step-by-Step Breakdown:</p>
-              <ol class="list-decimal pl-5 space-y-1 text-zinc-400">
-                <li>Identify key components: <span class="font-mono text-zinc-300">u = x&sup2;</span>, <span class="font-mono text-zinc-300">v = ln(x)</span>.</li>
-                <li>Calculate derivatives: <span class="font-mono text-zinc-300">u' = 2x</span> and <span class="font-mono text-zinc-300">v' = 1/x</span>.</li>
-                <li>Assemble elements: <span class="font-mono text-zinc-300">(2x)(ln(x)) + (x&sup2;)(1/x)</span>.</li>
-                <li>Simplify term results: <span class="font-mono text-zinc-300">2x &middot; ln(x) + x</span>.</li>
-              </ol>
-            </div>
-         
+            // প্রথমে আসল ক্যামেরার ফ্রেম আঁকা
+            tempCtx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+
+            // AI অন থাকলে বক্সগুলো ছবির ওপরে আঁকা
+            if (isAiActive && latestPredictions.length > 0) {
+                latestPredictions.forEach(p => {
+                    const [x, y, width, height] = p.bbox;
+                    tempCtx.strokeStyle = '#10B981';
+                    tempCtx.lineWidth = 4;
+                    tempCtx.strokeRect(x, y, width, height);
+
+                    tempCtx.fillStyle = '#10B981';
+                    tempCtx.font = 'bold 16px sans-serif';
+                    const text = `${p.class} (${Math.round(p.score * 100)}%)`;
+                    const textWidth = tempCtx.measureText(text).width;
+                    tempCtx.fillRect(x, y - 26, textWidth + 14, 26);
+
+                    tempCtx.fillStyle = '#FFFFFF';
+                    tempCtx.fillText(text, x + 7, y - 8);
+                });
+            }
+
+            // ছবি হিসেবে ডাউনলোড করার প্রক্রিয়া
+            const dataUrl = tempCanvas.toDataURL('image/png');
+            const downloadLink = document.createElement('a');
+            downloadLink.download = `AI-Snapshot-${Date.now()}.png`;
+            downloadLink.href = dataUrl;
+            downloadLink.click();
+        });
+
+        // ভিডিও স্টার্ট হলে ক্যানভাস সাইজ করা
+        video.addEventListener('loadedmetadata', adjustCanvasSize);
+
+        // অ্যাপ ইনিশিয়েট করা
+        window.onload = async () => {
+            await startWebcam();
+            await loadAIModel();
+        };
+    </script>
+</body>
+</html>
