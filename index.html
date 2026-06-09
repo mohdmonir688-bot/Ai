@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advance IT - Admin Panel</title>
+    <title>Advance IT - Premium Admin Panel</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,7 +20,7 @@
             <div class="bg-cyan-500 text-gray-900 p-2 rounded-lg font-bold tracking-wider text-sm shadow-[0_0_15px_rgba(6,182,212,0.5)]">
                 A I
             </div>
-            <span class="text-xl font-semibold tracking-wide bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Advance IT Admin</span>
+            <span class="text-xl font-semibold tracking-wide bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Advance IT Admin Dashboard</span>
         </div>
         <div id="syncStatus" class="flex items-center space-x-2 bg-gray-800/80 px-4 py-2 rounded-full border border-gray-700 text-sm">
             <span class="relative flex h-2 w-2">
@@ -31,72 +31,98 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <main class="max-w-6xl mx-auto p-6 space-y-8">
         
-        <section class="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 backdrop-blur-md shadow-xl">
-            <div class="flex items-center space-x-3 mb-6">
-                <i class="fa-solid fa-sliders text-cyan-400 text-xl"></i>
-                <h2 class="text-lg font-medium text-white">App Configurations</h2>
-            </div>
-            <form id="settingsForm" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Slider Image 1 URL</label>
-                    <input type="url" id="slider1" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Slider Image 2 URL</label>
-                    <input type="url" id="slider2" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Slider Image 3 URL</label>
-                    <input type="url" id="slider3" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Notice Bar Message</label>
-                    <textarea id="notice" rows="3" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors resize-none"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium py-3 rounded-xl hover:opacity-90 active:scale-[0.99] transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk mr-2"></i> Save Settings
-                </button>
-            </form>
-        </section>
-
-        <section class="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 backdrop-blur-md shadow-xl flex flex-col justify-between">
-            <div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section class="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 backdrop-blur-md shadow-xl">
                 <div class="flex items-center space-x-3 mb-6">
-                    <i class="fa-solid fa-square-plus text-emerald-400 text-xl"></i>
-                    <h2 class="text-lg font-medium text-white">Create New Menu</h2>
+                    <i class="fa-solid fa-sliders text-cyan-400 text-xl"></i>
+                    <h2 class="text-lg font-medium text-white">App Configurations</h2>
                 </div>
-                <form id="menuForm" class="space-y-4">
+                <form id="settingsForm" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Menu Title</label>
-                        <input type="text" id="menuTitle" placeholder="e.g., Live Chat" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Slider Image 1 URL</label>
+                        <input type="url" id="slider1" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Icon URL or Class</label>
-                        <input type="text" id="menuIcon" placeholder="https://link-to-icon.png" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Slider Image 2 URL</label>
+                        <input type="url" id="slider2" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">AppCreator24 Ref (Section ID)</label>
-                        <input type="text" id="menuRef" placeholder="e.g., section1" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Slider Image 3 URL</label>
+                        <input type="url" id="slider3" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors">
                     </div>
-                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium py-3 rounded-xl hover:opacity-90 active:scale-[0.99] transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer mt-4">
-                        <i class="fa-solid fa-plus mr-2"></i> Add Menu Item
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Notice Bar Message</label>
+                        <textarea id="notice" rows="3" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium py-3 rounded-xl hover:opacity-90 active:scale-[0.99] transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Settings
                     </button>
                 </form>
+            </section>
+
+            <section class="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 backdrop-blur-md shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <i class="fa-solid fa-square-plus text-emerald-400 text-xl"></i>
+                        <h2 class="text-lg font-medium text-white">Create New Menu</h2>
+                    </div>
+                    <form id="menuForm" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Menu Title</label>
+                            <input type="text" id="menuTitle" placeholder="e.g., Live Chat" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Icon URL or Class</label>
+                            <input type="text" id="menuIcon" placeholder="https://link-to-icon.png" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">AppCreator24 Ref (Section ID)</label>
+                            <input type="text" id="menuRef" placeholder="e.g., section1" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors">
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium py-3 rounded-xl hover:opacity-90 active:scale-[0.99] transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer mt-4">
+                            <i class="fa-solid fa-plus mr-2"></i> Add Menu Item
+                        </button>
+                    </form>
+                </div>
+                <div class="mt-6 pt-6 border-t border-gray-800 text-center text-xs text-gray-500">
+                    Every action updates your Google Sheet configuration directly in real-time.
+                </div>
+            </section>
+        </div>
+
+        <section class="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 backdrop-blur-md shadow-xl">
+            <div class="flex items-center space-x-3 mb-6">
+                <i class="fa-solid fa-list-check text-indigo-400 text-xl"></i>
+                <h2 class="text-lg font-medium text-white">Saved Menus (Manage & Delete)</h2>
             </div>
-            
-            <div class="mt-6 pt-6 border-t border-gray-800 text-center text-xs text-gray-500">
-                Every action updates your Google Sheet configuration directly in real-time.
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-800 text-xs uppercase tracking-wider text-gray-400">
+                            <th class="pb-3 pl-4">Title</th>
+                            <th class="pb-3">Icon Link</th>
+                            <th class="pb-3">Ref ID</th>
+                            <th class="pb-3 pr-4 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="menuTableBody" class="divide-y divide-gray-800/50 text-sm">
+                        <tr>
+                            <td colspan="4" class="text-center py-6 text-gray-500 italic">Loading saved menus...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
+
     </main>
 
     <script>
-        // আপনার দেওয়া আসল লাইভ লিংক এখানে বসানো হয়েছে
+        // আপনার আসল লাইভ গুগল স্ক্রিপ্ট লিংক
         const API_URL = "https://script.google.com/macros/s/AKfycbw0231OHNhwXqi4ZeYq5s92RSaX3L9PnR6eaZuIab-MkewFy61tsOtwajMawussSQYV/exec"; 
 
-        // Status Badge Handler
+        // Status Badge UI Handler
         function updateStatus(status, text) {
             const dot = document.getElementById('statusDot');
             const pulse = document.getElementById('statusDotPulse');
@@ -118,7 +144,7 @@
             label.innerText = text;
         }
 
-        // 1. LOAD CONFIGURATIONS (GET Request)
+        // 1. LOAD DATA & BUILD MENU TABLE (GET Request)
         async function loadSheetData() {
             try {
                 updateStatus('connecting', 'Connecting Database...');
@@ -126,12 +152,38 @@
                 if (!response.ok) throw new Error("Network error");
                 const data = await response.json();
                 
+                // Sliders & Notice Load
                 if(data.settings) {
                     document.getElementById('slider1').value = data.settings.slider1 || '';
                     document.getElementById('slider2').value = data.settings.slider2 || '';
                     document.getElementById('slider3').value = data.settings.slider3 || '';
                     document.getElementById('notice').value = data.settings.notice || '';
                 }
+
+                // Menus Table Render
+                const tbody = document.getElementById('menuTableBody');
+                tbody.innerHTML = ''; // Clear older list
+
+                if(data.menus && data.menus.length > 0) {
+                    data.menus.forEach((menu, index) => {
+                        const row = document.createElement('tr');
+                        row.className = "hover:bg-gray-900/30 transition-colors";
+                        row.innerHTML = `
+                            <td class="py-4 pl-4 font-medium text-white">${menu.title}</td>
+                            <td class="py-4 text-xs text-gray-400 max-w-[200px] truncate">${menu.icon}</td>
+                            <td class="py-4 text-cyan-400 font-mono text-xs">${menu.ref}</td>
+                            <td class="py-4 pr-4 text-center">
+                                <button onclick="deleteMenuItem(${index + 2})" class="bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white px-3 py-1.5 rounded-lg border border-rose-500/20 text-xs font-medium transition-all cursor-pointer">
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-gray-500 italic">No menu items found. Create one above!</td></tr>`;
+                }
+
                 updateStatus('online', '🟢 Live / Connected');
             } catch (error) {
                 console.error("Load Error:", error);
@@ -139,7 +191,7 @@
             }
         }
 
-        // 2. SAVE SETTINGS (POST Request)
+        // 2. SAVE CONFIGURATIONS (POST Request)
         document.getElementById('settingsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             updateStatus('connecting', 'Saving settings...');
@@ -196,16 +248,47 @@
                 if(result.status === 'success') {
                     alert("💥 Menu Item added successfully to Google Sheets!");
                     document.getElementById('menuForm').reset();
-                    loadSheetData();
+                    loadSheetData(); // Refresh list
                 } else {
                     throw new Error("Failed adding menu");
                 }
             } catch (error) {
                 console.error("Add Menu Error:", error);
-                alert("❌ Error Adding Menu! Please check your Web App settings.");
+                alert("❌ Error Adding Menu! Please check your connection.");
                 updateStatus('error', '🔴 CORS / Offline Error');
             }
         });
+
+        // 4. DELETE MENU ITEM FUNCTION (POST Request)
+        async function deleteMenuItem(rowId) {
+            if(!confirm("Are you sure you want to delete this menu item from Google Sheets?")) return;
+            
+            updateStatus('connecting', 'Deleting item...');
+            const payload = {
+                action: 'deleteMenu',
+                row: rowId
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if(result.status === 'success') {
+                    alert("🗑️ Menu Item deleted successfully!");
+                    loadSheetData(); // Refresh list
+                } else {
+                    throw new Error("Failed deleting");
+                }
+            } catch (error) {
+                console.error("Delete Error:", error);
+                alert("❌ Error Deleting Menu Item!");
+                updateStatus('error', '🔴 CORS / Offline Error');
+            }
+        }
 
         // Initialize App Data on Window Load
         window.onload = loadSheetData;
