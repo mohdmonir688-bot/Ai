@@ -226,19 +226,23 @@
       saveBtn.textContent = "Updating Google Sheet...";
       setSyncStatus('saving', 'Updating Settings...');
 
-      const settings = {
-        slider1: document.getElementById('slider1').value.trim(),
-        slider2: document.getElementById('slider2').value.trim(),
-        slider3: document.getElementById('slider3').value.trim(),
-        notice: document.getElementById('notice').value.trim()
-      };
+      const slider1 = document.getElementById('slider1').value.trim();
+      const slider2 = document.getElementById('slider2').value.trim();
+      const slider3 = document.getElementById('slider3').value.trim();
+      const notice = document.getElementById('notice').value.trim();
 
       try {
         // Apps Script doPost-এ ডেটা পাঠানো হচ্ছে
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'updateSettings', settings: settings })
+          body: JSON.stringify({ 
+            action: 'updateSettings', 
+            slider1: slider1, 
+            slider2: slider2, 
+            slider3: slider3, 
+            notice: notice 
+          })
         });
         
         alert("Settings saved on Google Sheets!");
@@ -261,18 +265,20 @@
       addBtn.textContent = "Appending to Google Sheet...";
       setSyncStatus('saving', 'Adding Item...');
 
-      const newItem = {
-        id: Date.now().toString(),
-        title: document.getElementById('menuTitle').value.trim(),
-        icon: document.getElementById('menuIcon').value.trim(),
-        ref: document.getElementById('menuRef').value.trim()
-      };
+      const title = document.getElementById('menuTitle').value.trim();
+      const icon = document.getElementById('menuIcon').value.trim();
+      const ref = document.getElementById('menuRef').value.trim();
 
       try {
         await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'addMenuItem', item: newItem })
+          body: JSON.stringify({ 
+            action: 'addMenu', 
+            title: title, 
+            icon: icon, 
+            ref: ref 
+          })
         });
 
         menuForm.reset();
@@ -349,4 +355,4 @@
 
   </script>
 </body>
-  </html>
+</html>
