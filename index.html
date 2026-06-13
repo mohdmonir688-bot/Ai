@@ -87,7 +87,7 @@
     <main class="flex-grow flex items-center justify-center p-4 md:p-8">
         
         <!-- 1. VIP GLASSMORPHISM LOGIN SCREEN (পেজ লোড হলেই এটি সরাসরি দৃশ্যমান হবে) -->
-        <div id="loginScreen" class="w-full max-w-md glass-panel rounded-3xl p-8 relative overflow-hidden shadow-neon-purple transition-all duration-300 transform block">
+        <div id="loginScreen" style="display: block;" class="w-full max-w-md glass-panel rounded-3xl p-8 relative overflow-hidden shadow-neon-purple transform transition-all duration-300">
             <div class="absolute -top-12 -left-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl"></div>
             <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
             
@@ -103,7 +103,7 @@
                 <p class="text-slate-400 text-xs tracking-widest mt-1 uppercase font-semibold">VIP Calling & Media Hub</p>
             </div>
 
-            <!-- কোনো ফর্ম রিলোড বা এরর হবে না, বাটন ক্লিকে ইনস্ট্যান্ট সাবমিট হবে -->
+            <!-- ফর্ম রিলোড মুক্ত বাটন ক্লিক হ্যান্ডলার -->
             <div class="space-y-6 relative z-10">
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Secure Phone Number</label>
@@ -133,7 +133,7 @@
         </div>
 
         <!-- 2. ULTIMATE DASHBOARD FRAMEWORK (লগইন করা থাকলে স্বয়ংক্রিয়ভাবে ওপেন হবে) -->
-        <div id="dashboardScreen" class="w-full max-w-5xl space-y-6 hidden opacity-0 scale-95 transition-all duration-300 transform">
+        <div id="dashboardScreen" style="display: none;" class="w-full max-w-5xl space-y-6 transform transition-all duration-300">
             
             <!-- HEADER SECTION -->
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 glass-panel p-4 rounded-2xl">
@@ -232,7 +232,7 @@
                             <video id="remoteVideo" class="w-full h-full object-cover rounded-xl" autoplay playsinline></video>
                             
                             <!-- Simulation Remote View Container -->
-                            <div id="simulatedRemoteContainer" class="absolute inset-0 hidden items-center justify-center bg-slate-950/90 z-10">
+                            <div id="simulatedRemoteContainer" style="display: none;" class="absolute inset-0 items-center justify-center bg-slate-950/90 z-10">
                                 <div class="text-center space-y-3">
                                     <i class="fa-solid fa-circle-nodes text-3xl text-cyan-400 animate-spin"></i>
                                     <p class="text-xs font-mono text-cyan-400">LOOPBACK STREAMING ACTIVE</p>
@@ -248,7 +248,7 @@
                         </div>
 
                         <!-- LOCAL PREVIEW PIP (Draggable) -->
-                        <div id="localVideoWrapper" class="absolute bottom-3 right-3 w-24 h-32 rounded-lg overflow-hidden glass-panel border border-cyan-400/40 shadow-neon-cyan z-20 hidden">
+                        <div id="localVideoWrapper" style="display: none;" class="absolute bottom-3 right-3 w-24 h-32 rounded-lg overflow-hidden glass-panel border border-cyan-400/40 shadow-neon-cyan z-20">
                             <video id="localVideo" class="w-full h-full object-cover" autoplay muted playsinline></video>
                         </div>
 
@@ -260,7 +260,7 @@
                         </div>
                     </div>
 
-                    <!-- P2P MEDIA SHARING CHAT (No Firebase/Google Sheet - Direct P2P & Local Memory) -->
+                    <!-- P2P MEDIA SHARING CHAT (Direct P2P & Local Memory) -->
                     <div class="md:col-span-5 glass-panel p-4 rounded-2xl flex flex-col justify-between h-[300px]">
                         <div class="border-b border-slate-800 pb-2 mb-2 flex justify-between items-center">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-300">P2P Media Box</span>
@@ -307,4 +307,4 @@
             <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-emerald-400 text-2xl mx-auto mb-4 animate-pulse">
                 <i class="fa-solid fa-phone-volume"></i>
             </div>
-            <h4 class
+            <h4 class="headi
