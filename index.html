@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advance IT | Premium calling network</title>
+    <title>Advance IT | Premium Calling & Chat Network</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome 6 for VIP icons -->
+    <!-- FontAwesome 6 for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Extremely Stable jsDelivr CDN for PeerJS WebRTC Engine -->
+    <!-- Stable jsDelivr CDN for PeerJS WebRTC Engine -->
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.4.7/dist/peerjs.min.js"></script>
     
     <script>
@@ -17,7 +17,7 @@
                 extend: {
                     colors: {
                         cyber: {
-                            dark: '#030712', 
+                            dark: '#020617', 
                             cyan: '#00f0ff',
                             purple: '#8b5cf6',
                             emerald: '#10b981',
@@ -55,14 +55,14 @@
         }
 
         .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
+            background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .glass-panel-heavy {
-            background: rgba(8, 13, 28, 0.9);
+            background: rgba(8, 13, 28, 0.95);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -78,9 +78,6 @@
             background: rgba(0, 240, 255, 0.2);
             border-radius: 4px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 240, 255, 0.4);
-        }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden antialiased selection:bg-cyan-500 selection:text-slate-900">
@@ -89,8 +86,8 @@
 
     <main class="flex-grow flex items-center justify-center p-4 md:p-8">
         
-        <!-- 1. VIP GLASSMORPHISM LOGIN SCREEN (Hidden by default, shown by JS dynamically to avoid flickering) -->
-        <div id="loginScreen" class="w-full max-w-md glass-panel rounded-3xl p-8 relative overflow-hidden shadow-neon-purple transition-all duration-500 ease-in-out transform hidden opacity-0 scale-95">
+        <!-- 1. VIP GLASSMORPHISM LOGIN SCREEN (পেজ লোড হলেই এটি সরাসরি দৃশ্যমান হবে) -->
+        <div id="loginScreen" class="w-full max-w-md glass-panel rounded-3xl p-8 relative overflow-hidden shadow-neon-purple transition-all duration-300 transform block">
             <div class="absolute -top-12 -left-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl"></div>
             <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
             
@@ -103,10 +100,10 @@
                 <h1 class="heading-font text-3xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
                     ADVANCE IT
                 </h1>
-                <p class="text-slate-400 text-xs tracking-widest mt-1 uppercase font-semibold">VIP Calling System</p>
+                <p class="text-slate-400 text-xs tracking-widest mt-1 uppercase font-semibold">VIP Calling & Media Hub</p>
             </div>
 
-            <!-- Removed traditional <form> to completely prevent native submit-reloads on GitHub Pages -->
+            <!-- কোনো ফর্ম রিলোড বা এরর হবে না, বাটন ক্লিকে ইনস্ট্যান্ট সাবমিট হবে -->
             <div class="space-y-6 relative z-10">
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Secure Phone Number</label>
@@ -123,7 +120,6 @@
                             class="w-full pl-11 pr-4 py-3.5 bg-slate-950/80 border border-slate-800 rounded-xl focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 text-slate-100 transition-all placeholder:text-slate-600"
                         />
                     </div>
-                    <p class="text-[10px] text-slate-500 mt-2">Enter your identity number to enter the control module.</p>
                 </div>
 
                 <button 
@@ -136,8 +132,8 @@
             </div>
         </div>
 
-        <!-- 2. ULTIMATE DASHBOARD FRAMEWORK (Hidden by Default) -->
-        <div id="dashboardScreen" class="w-full max-w-5xl space-y-6 hidden opacity-0 scale-95 transition-all duration-500 ease-in-out transform">
+        <!-- 2. ULTIMATE DASHBOARD FRAMEWORK (লগইন করা থাকলে স্বয়ংক্রিয়ভাবে ওপেন হবে) -->
+        <div id="dashboardScreen" class="w-full max-w-5xl space-y-6 hidden opacity-0 scale-95 transition-all duration-300 transform">
             
             <!-- HEADER SECTION -->
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 glass-panel p-4 rounded-2xl">
@@ -147,11 +143,11 @@
                     </div>
                     <div>
                         <h2 class="heading-font text-xl font-bold tracking-wider text-slate-100">ADVANCE IT</h2>
-                        <span class="text-[10px] uppercase font-semibold text-cyan-400 tracking-widest">Quantum calling network</span>
+                        <span class="text-[10px] uppercase font-semibold text-cyan-400 tracking-widest">Quantum Media Portal</span>
                     </div>
                 </div>
 
-                <!-- Active User Card inside Header -->
+                <!-- Active User Card -->
                 <div id="activeUserCard" class="flex flex-wrap items-center gap-3 bg-slate-950/60 p-2 pl-4 pr-3 rounded-xl border border-slate-800">
                     <div class="flex items-center gap-2">
                         <span class="relative flex h-2.5 w-2.5">
@@ -162,145 +158,153 @@
                     </div>
                     <div class="h-4 w-[1px] bg-slate-800"></div>
                     <button onclick="handleLogout()" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white text-xs font-semibold rounded-lg transition-all border border-rose-500/20">
-                        <i class="fa-solid fa-power-off mr-1.5"></i> Exit Secure Session
+                        <i class="fa-solid fa-power-off mr-1.5"></i> Exit Session
                     </button>
                 </div>
             </div>
 
             <!-- VIP BANNER CAROUSEL -->
-            <div class="relative w-full h-44 md:h-64 rounded-2xl overflow-hidden border border-slate-800 shadow-neon-purple glass-panel">
+            <div class="relative w-full h-40 md:h-56 rounded-2xl overflow-hidden border border-slate-800 shadow-neon-purple glass-panel">
                 <div id="carouselTrack" class="relative w-full h-full">
-                    <!-- Slide 1 -->
-                    <div class="absolute inset-0 opacity-100 transition-opacity duration-1000 ease-in-out bg-cover bg-center flex items-end p-6 md:p-10" id="slide0">
+                    <div class="absolute inset-0 opacity-100 transition-opacity duration-1000 ease-in-out bg-cover bg-center flex items-end p-6" id="slide0">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent"></div>
-                        <div class="relative z-10 space-y-1">
-                            <span class="text-[10px] uppercase tracking-widest text-cyan-400 font-extrabold bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/50">VIP Elite Access</span>
-                            <h3 class="heading-font text-lg md:text-2xl font-bold tracking-tight">Ultra-Low Latency Media Pipeline</h3>
-                        </div>
+                        <h3 class="relative z-10 heading-font text-lg md:text-xl font-bold tracking-tight text-cyan-400">Ultra-Low Latency Media Pipeline</h3>
                     </div>
-                    <!-- Slide 2 -->
-                    <div class="absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out bg-cover bg-center flex items-end p-6 md:p-10" id="slide1">
+                    <div class="absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out bg-cover bg-center flex items-end p-6" id="slide1">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent"></div>
-                        <div class="relative z-10 space-y-1">
-                            <span class="text-[10px] uppercase tracking-widest text-purple-400 font-extrabold bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/50">End-To-End Security</span>
-                            <h3 class="heading-font text-lg md:text-2xl font-bold tracking-tight">Fully Peer-to-Peer Encryption Architecture</h3>
-                        </div>
+                        <h3 class="relative z-10 heading-font text-lg md:text-xl font-bold tracking-tight text-purple-400">Decentralized P2P Media Architecture</h3>
                     </div>
-                    <!-- Slide 3 -->
-                    <div class="absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out bg-cover bg-center flex items-end p-6 md:p-10" id="slide2">
+                    <div class="absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out bg-cover bg-center flex items-end p-6" id="slide2">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent"></div>
-                        <div class="relative z-10 space-y-1">
-                            <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-extrabold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/50">Master Control</span>
-                            <h3 class="heading-font text-lg md:text-2xl font-bold tracking-tight">Empowering Users with True Decentralization</h3>
-                        </div>
+                        <h3 class="relative z-10 heading-font text-lg md:text-xl font-bold tracking-tight text-emerald-400">Secure File & Identity Isolation</h3>
                     </div>
-                </div>
-                <div class="absolute bottom-4 right-6 z-20 flex gap-1.5">
-                    <button class="w-1.5 h-1.5 rounded-full bg-cyan-400 transition-all" id="dot0" onclick="setSlide(0)"></button>
-                    <button class="w-1.5 h-1.5 rounded-full bg-slate-600 transition-all" id="dot1" onclick="setSlide(1)"></button>
-                    <button class="w-1.5 h-1.5 rounded-full bg-slate-600 transition-all" id="dot2" onclick="setSlide(2)"></button>
                 </div>
             </div>
 
-            <!-- MAIN GRID CONTENT -->
+            <!-- MAIN APPS GRID -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <!-- COLUMN LEFT: CALLING HUB & LIVE LOGS -->
+                <!-- LEFT COLUMN: CALLING & STATUS -->
                 <div class="lg:col-span-4 space-y-6">
-                    
-                    <!-- CALLING HUB CARD -->
-                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
-                        <div class="absolute -top-12 -right-12 w-24 h-24 bg-cyan-500/10 rounded-full blur-xl"></div>
-                        <h3 class="heading-font text-lg font-bold tracking-wider text-slate-100 mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-tower-broadcast text-cyan-400"></i> Initiate Secure Connection
+                    <div class="glass-panel p-5 rounded-2xl relative overflow-hidden">
+                        <h3 class="heading-font text-md font-bold text-slate-100 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-tower-broadcast text-cyan-400"></i> Establish Link
                         </h3>
-                        
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1.5">Recipient's Phone Identifier</label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                                        <i class="fa-solid fa-id-card"></i>
-                                    </span>
-                                    <input 
-                                        type="tel" 
-                                        id="targetPhone" 
-                                        placeholder="Target Phone Number" 
-                                        class="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:border-cyan-400 text-sm text-slate-100 font-mono tracking-wider transition-all"
-                                    />
-                                </div>
+                                <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1">Target Identifier</label>
+                                <input 
+                                    type="tel" 
+                                    id="targetPhone" 
+                                    placeholder="Enter peer's number" 
+                                    class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:border-cyan-400 text-sm text-slate-100 font-mono"
+                                />
                             </div>
-
-                            <div class="grid grid-cols-2 gap-3">
-                                <button 
-                                    onclick="startCall('video')" 
-                                    class="py-3 px-4 bg-gradient-to-tr from-cyan-600 to-slate-900 border border-cyan-500/30 text-slate-100 font-bold text-xs uppercase tracking-wider rounded-xl transition-all duration-300 hover:shadow-neon-cyan active:scale-95 flex flex-col items-center justify-center gap-2"
-                                >
-                                    <i class="fa-solid fa-video text-base text-cyan-400"></i>
-                                    <span>Video Link</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="startCall('video')" class="py-2.5 bg-cyan-950/40 hover:bg-cyan-500 hover:text-slate-950 border border-cyan-500/30 text-cyan-400 text-xs font-bold rounded-xl transition-all flex flex-col items-center gap-1">
+                                    <i class="fa-solid fa-video"></i> Video Link
                                 </button>
-                                <button 
-                                    onclick="startCall('audio')" 
-                                    class="py-3 px-4 bg-gradient-to-tr from-emerald-600 to-slate-900 border border-emerald-500/30 text-slate-100 font-bold text-xs uppercase tracking-wider rounded-xl transition-all duration-300 hover:shadow-neon-emerald active:scale-95 flex flex-col items-center justify-center gap-2"
-                                >
-                                    <i class="fa-solid fa-phone-volume text-base text-emerald-400"></i>
-                                    <span>Audio Link</span>
+                                <button onclick="startCall('audio')" class="py-2.5 bg-emerald-950/40 hover:bg-emerald-500 hover:text-slate-950 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-xl transition-all flex flex-col items-center gap-1">
+                                    <i class="fa-solid fa-phone"></i> Audio Link
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ENGINE STATUS / FEEDBACK PANEL -->
-                    <div class="glass-panel p-5 rounded-2xl">
-                        <div class="flex items-center justify-between mb-3 border-b border-slate-800/50 pb-2">
-                            <span class="text-xs uppercase font-extrabold tracking-wider text-slate-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-server text-cyan-500"></i> Local Signal Node
-                            </span>
-                            <span id="nodeStatusBadge" class="text-[10px] bg-yellow-500/10 text-yellow-400 font-mono font-bold px-2 py-0.5 rounded border border-yellow-500/20">
-                                Initializing
-                            </span>
+                    <!-- LOCAL SIGNAL LOG -->
+                    <div class="glass-panel p-4 rounded-2xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs uppercase font-extrabold text-slate-400">System Logs</span>
+                            <span id="nodeStatusBadge" class="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded border border-yellow-500/20">Initializing</span>
                         </div>
-                        <div class="space-y-2 max-h-40 overflow-y-auto font-mono text-xs text-slate-400" id="terminalLogs">
-                            <div class="text-slate-500">> Ready for direct network link...</div>
+                        <div class="space-y-1.5 max-h-32 overflow-y-auto font-mono text-[10px] text-slate-500" id="terminalLogs">
+                            <div>> System ready for direct link...</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- COLUMN RIGHT: THE VIDEO ENGINE DISPLAY -->
-                <div class="lg:col-span-8 glass-panel p-4 rounded-2xl flex flex-col justify-between min-h-[400px] relative overflow-hidden group">
+                <!-- RIGHT COLUMN: STREAMING CONTROLS & MEDIA CHAT -->
+                <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 gap-6">
                     
-                    <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center transition-opacity duration-300 pointer-events-none">
-                        <div class="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-2 pointer-events-auto">
-                            <span id="callTypeBadge" class="w-2.5 h-2.5 rounded-full bg-slate-500 animate-pulse"></span>
-                            <span id="callStatusText" class="text-xs font-semibold tracking-wider text-slate-300">Idle Pipeline</span>
+                    <!-- VIDEO PANEL (8-cols on tablet) -->
+                    <div class="md:col-span-7 glass-panel p-3 rounded-2xl flex flex-col justify-between min-h-[300px] relative overflow-hidden bg-slate-950">
+                        <div class="absolute inset-0 z-0">
+                            <video id="remoteVideo" class="w-full h-full object-cover rounded-xl" autoplay playsinline></video>
+                            
+                            <!-- Simulation Remote View Container -->
+                            <div id="simulatedRemoteContainer" class="absolute inset-0 hidden items-center justify-center bg-slate-950/90 z-10">
+                                <div class="text-center space-y-3">
+                                    <i class="fa-solid fa-circle-nodes text-3xl text-cyan-400 animate-spin"></i>
+                                    <p class="text-xs font-mono text-cyan-400">LOOPBACK STREAMING ACTIVE</p>
+                                    <span id="simulatedCallerId" class="text-[10px] text-slate-500 font-mono"></span>
+                                </div>
+                            </div>
+
+                            <!-- Placeholder -->
+                            <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 text-center p-4">
+                                <i class="fa-solid fa-video-slash text-2xl mb-2"></i>
+                                <p class="text-xs font-bold text-slate-400">No Active Stream</p>
+                            </div>
+                        </div>
+
+                        <!-- LOCAL PREVIEW PIP (Draggable) -->
+                        <div id="localVideoWrapper" class="absolute bottom-3 right-3 w-24 h-32 rounded-lg overflow-hidden glass-panel border border-cyan-400/40 shadow-neon-cyan z-20 hidden">
+                            <video id="localVideo" class="w-full h-full object-cover" autoplay muted playsinline></video>
+                        </div>
+
+                        <!-- HUD calling controls -->
+                        <div id="callControls" class="relative z-30 mt-auto flex justify-center items-center gap-2 bg-slate-900/80 border border-slate-800 p-2 rounded-xl max-w-xs mx-auto">
+                            <button onclick="toggleAudio()" id="btnMute" class="w-8 h-8 rounded-lg bg-slate-950 flex items-center justify-center text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-microphone text-xs"></i></button>
+                            <button onclick="toggleVideo()" id="btnCamOff" class="w-8 h-8 rounded-lg bg-slate-950 flex items-center justify-center text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-video text-xs"></i></button>
+                            <button onclick="endCall()" class="w-10 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center shadow-neon-rose"><i class="fa-solid fa-phone-slash text-xs"></i></button>
                         </div>
                     </div>
 
-                    <div class="absolute inset-0 bg-slate-950/90 flex items-center justify-center z-0">
-                        <!-- Remote Video Feed -->
-                        <video id="remoteVideo" class="w-full h-full object-cover rounded-2xl" autoplay playsinline></video>
-                        
-                        <!-- Simulated video loopback element to guarantee video testing works in all cases -->
-                        <div id="simulatedRemoteContainer" class="absolute inset-0 hidden items-center justify-center bg-slate-950/90 z-10">
-                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15),transparent_70%)] animate-pulse"></div>
-                            <div class="text-center space-y-4">
-                                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-[2px] mx-auto shadow-neon-cyan">
-                                    <div class="w-full h-full bg-slate-950 rounded-full flex items-center justify-center text-3xl text-cyan-400">
-                                        <i class="fa-solid fa-circle-nodes animate-spin-slow"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-md font-mono text-cyan-400 tracking-wider">LOOPBACK CONNECTED</p>
-                                    <p id="simulatedCallerId" class="text-xs text-slate-400 font-mono mt-1">Autonomous Test Stream</p>
-                                </div>
-                            </div>
+                    <!-- P2P MEDIA SHARING CHAT (No Firebase/Google Sheet - Direct P2P & Local Memory) -->
+                    <div class="md:col-span-5 glass-panel p-4 rounded-2xl flex flex-col justify-between h-[300px]">
+                        <div class="border-b border-slate-800 pb-2 mb-2 flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">P2P Media Box</span>
+                            <span class="text-[9px] bg-cyan-500/10 text-cyan-400 font-bold px-2 py-0.5 rounded border border-cyan-500/20">Automatic</span>
                         </div>
-                        
-                        <!-- Empty Stream Placeholder State -->
-                        <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 text-slate-500 text-center p-6 space-y-4">
-                            <div class="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-600 shadow-inner">
-                                <i class="fa-solid fa-eye-slash text-2xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-400">Secure Screen Stream Offline</p>
-                                <p class="text-xs text-slate-600 mt-1 max-w-sm">No active vi
+
+                        <!-- Messaging/Sharing Logs -->
+                        <div id="mediaBoxLogs" class="flex-grow overflow-y-auto space-y-3 pr-1 text-xs max-h-[170px]">
+                            <div class="text-slate-500 italic text-center py-4">Share images & voice notes below. No setup required.</div>
+                        </div>
+
+                        <!-- Input controls (Record Voice, Attach Image) -->
+                        <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                            <!-- Hidden input for Image Selection -->
+                            <input type="file" id="mediaImageInput" accept="image/*" class="hidden" onchange="processImageUpload(this)">
+                            <button onclick="document.getElementById('mediaImageInput').click()" class="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-slate-900" title="Send Image">
+                                <i class="fa-solid fa-image"></i>
+                            </button>
+
+                            <!-- Voice Note Recorder Button -->
+                            <button id="btnVoiceRecord" onclick="toggleVoiceRecord()" class="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-400 hover:bg-slate-900" title="Send Voice Message">
+                                <i class="fa-solid fa-microphone-lines" id="voiceMicIcon"></i>
+                            </button>
+
+                            <input 
+                                type="text" 
+                                id="chatTextInput" 
+                                placeholder="Type msg..." 
+                                onkeydown="if(event.key === 'Enter') sendTextMessage()"
+                                class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-400"
+                            />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- INCOMING CALL MODAL -->
+    <div id="incomingCallModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 hidden">
+        <div class="fixed inset-0 bg-slate-950/85 backdrop-blur-lg"></div>
+        <div class="glass-panel rounded-3xl p-8 max-w-sm w-full relative z-10 text-center shadow-neon-emerald border border-emerald-500/20">
+            <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-emerald-400 text-2xl mx-auto mb-4 animate-pulse">
+                <i class="fa-solid fa-phone-volume"></i>
+            </div>
+            <h4 class
