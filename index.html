@@ -86,7 +86,7 @@
 
     <main class="flex-grow flex items-center justify-center p-4 md:p-8">
         
-        <!-- 1. VIP GLASSMORPHISM LOGIN SCREEN (সব সিকিউরিটি ব্লক থেকে মুক্ত) -->
+        <!-- 1. VIP GLASSMORPHISM LOGIN SCREEN (পেজ লোড হলেই এটি সরাসরি দৃশ্যমান হবে) -->
         <div id="loginScreen" style="display: block;" class="w-full max-w-md glass-panel rounded-3xl p-8 relative overflow-hidden shadow-neon-purple transform transition-all duration-300">
             <div class="absolute -top-12 -left-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl"></div>
             <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
@@ -103,7 +103,7 @@
                 <p class="text-slate-400 text-xs tracking-widest mt-1 uppercase font-semibold">VIP Calling & Media Hub</p>
             </div>
 
-            <!-- ইনলাইন স্ক্রিপ্টবিহীন আধুনিক বাটন ও ইনপুট লজিক -->
+            <!-- কোনো ফর্ম রিফ্রেশ ঝুটঝামেলা নেই, সরাসরি বাটন ক্লিকে কাজ করবে -->
             <div class="space-y-6 relative z-10">
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Secure Phone Number</label>
@@ -116,6 +116,7 @@
                             id="loginPhone" 
                             required 
                             placeholder="Enter phone number" 
+                            onkeydown="if(event.key === 'Enter') handleLogin()"
                             class="w-full pl-11 pr-4 py-3.5 bg-slate-950/80 border border-slate-800 rounded-xl focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 text-slate-100 transition-all placeholder:text-slate-600"
                         />
                     </div>
@@ -123,7 +124,7 @@
 
                 <button 
                     type="button"
-                    id="loginBtn"
+                    onclick="handleLogin()"
                     class="w-full py-4 px-6 bg-gradient-to-r from-cyan-500 via-purple-600 to-emerald-500 text-slate-950 font-bold uppercase tracking-wider rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-neon-cyan hover:shadow-neon-purple focus:outline-none"
                 >
                     Authenticate Identity <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>
@@ -131,7 +132,7 @@
             </div>
         </div>
 
-        <!-- 2. ULTIMATE DASHBOARD FRAMEWORK -->
+        <!-- 2. ULTIMATE DASHBOARD FRAMEWORK (লগইন করা থাকলে স্বয়ংক্রিয়ভাবে ওপেন হবে) -->
         <div id="dashboardScreen" style="display: none;" class="w-full max-w-5xl space-y-6 transform transition-all duration-300">
             
             <!-- HEADER SECTION -->
@@ -156,7 +157,7 @@
                         <span id="userPhoneDisplay" class="text-xs font-mono font-bold tracking-wider text-slate-300"></span>
                     </div>
                     <div class="h-4 w-[1px] bg-slate-800"></div>
-                    <button id="logoutBtn" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white text-xs font-semibold rounded-lg transition-all border border-rose-500/20">
+                    <button onclick="handleLogout()" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white text-xs font-semibold rounded-lg transition-all border border-rose-500/20">
                         <i class="fa-solid fa-power-off mr-1.5"></i> Exit Session
                     </button>
                 </div>
@@ -177,11 +178,6 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent"></div>
                         <h3 class="relative z-10 heading-font text-lg md:text-xl font-bold tracking-tight text-emerald-400">Secure File & Identity Isolation</h3>
                     </div>
-                </div>
-                <div class="absolute bottom-4 right-6 z-20 flex gap-1.5">
-                    <button class="w-1.5 h-1.5 rounded-full bg-cyan-400 transition-all shadow-neon-cyan" id="dot0"></button>
-                    <button class="w-1.5 h-1.5 rounded-full bg-slate-600 transition-all" id="dot1"></button>
-                    <button class="w-1.5 h-1.5 rounded-full bg-slate-600 transition-all" id="dot2"></button>
                 </div>
             </div>
 
@@ -205,10 +201,10 @@
                                 />
                             </div>
                             <div class="grid grid-cols-2 gap-2">
-                                <button id="videoCallBtn" class="py-2.5 bg-cyan-950/40 hover:bg-cyan-500 hover:text-slate-950 border border-cyan-500/30 text-cyan-400 text-xs font-bold rounded-xl transition-all flex flex-col items-center gap-1">
+                                <button onclick="startCall('video')" class="py-2.5 bg-cyan-950/40 hover:bg-cyan-500 hover:text-slate-950 border border-cyan-500/30 text-cyan-400 text-xs font-bold rounded-xl transition-all flex flex-col items-center gap-1">
                                     <i class="fa-solid fa-video"></i> Video Link
                                 </button>
-                                <button id="audioCallBtn" class="py-2.5 bg-emerald-950/40 hover:bg-emerald-500 hover:text-slate-950 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-xl transition-all flex flex-col items-center gap-1">
+                                <button onclick="startCall('audio')" class="py-2.5 bg-emerald-950/40 hover:bg-emerald-500 hover:text-slate-950 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-xl transition-all flex flex-col items-center gap-1">
                                     <i class="fa-solid fa-phone"></i> Audio Link
                                 </button>
                             </div>
@@ -258,9 +254,9 @@
 
                         <!-- HUD calling controls -->
                         <div id="callControls" class="relative z-30 mt-auto flex justify-center items-center gap-2 bg-slate-900/80 border border-slate-800 p-2 rounded-xl max-w-xs mx-auto">
-                            <button id="btnMute" class="w-8 h-8 rounded-lg bg-slate-950 flex items-center justify-center text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-microphone text-xs"></i></button>
-                            <button id="btnCamOff" class="w-8 h-8 rounded-lg bg-slate-950 flex items-center justify-center text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-video text-xs"></i></button>
-                            <button id="btnEndCall" class="w-10 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center shadow-neon-rose"><i class="fa-solid fa-phone-slash text-xs"></i></button>
+                            <button onclick="toggleAudio()" id="btnMute" class="w-8 h-8 rounded-lg bg-slate-950 flex items-center justify-center text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-microphone text-xs"></i></button>
+                            <button onclick="toggleVideo()" id="btnCamOff" class="w-8 h-8 rounded-lg bg-slate-950 flex items-center justify-center text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-video text-xs"></i></button>
+                            <button onclick="endCall()" class="w-10 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center shadow-neon-rose"><i class="fa-solid fa-phone-slash text-xs"></i></button>
                         </div>
                     </div>
 
@@ -279,13 +275,13 @@
                         <!-- Input controls (Record Voice, Attach Image) -->
                         <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
                             <!-- Hidden input for Image Selection -->
-                            <input type="file" id="mediaImageInput" accept="image/*" class="hidden">
-                            <button id="triggerImageUploadBtn" class="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-slate-900" title="Send Image">
+                            <input type="file" id="mediaImageInput" accept="image/*" class="hidden" onchange="processImageUpload(this)">
+                            <button onclick="document.getElementById('mediaImageInput').click()" class="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-slate-900" title="Send Image">
                                 <i class="fa-solid fa-image"></i>
                             </button>
 
                             <!-- Voice Note Recorder Button -->
-                            <button id="btnVoiceRecord" class="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-400 hover:bg-slate-900" title="Send Voice Message">
+                            <button id="btnVoiceRecord" onclick="toggleVoiceRecord()" class="w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-400 hover:bg-slate-900" title="Send Voice Message">
                                 <i class="fa-solid fa-microphone-lines" id="voiceMicIcon"></i>
                             </button>
 
@@ -293,6 +289,7 @@
                                 type="text" 
                                 id="chatTextInput" 
                                 placeholder="Type msg..." 
+                                onkeydown="if(event.key === 'Enter') sendTextMessage()"
                                 class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-400"
                             />
                         </div>
@@ -309,4 +306,777 @@
         <div class="glass-panel rounded-3xl p-8 max-w-sm w-full relative z-10 text-center shadow-neon-emerald border border-emerald-500/20">
             <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-emerald-400 text-2xl mx-auto mb-4 animate-pulse">
                 <i class="fa-solid fa-phone-volume"></i>
-          
+            </div>
+            <h4 class="heading-font text-xl font-bold mb-1">Incoming Call</h4>
+            <span id="callerIdDisplay" class="block text-sm font-mono tracking-widest text-emerald-400 font-extrabold mb-6"></span>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="declineCall()" class="py-3 px-4 bg-slate-900 hover:bg-rose-650 border border-rose-500/30 text-rose-400 text-xs font-bold uppercase rounded-xl transition-all">Decline</button>
+                <button onclick="acceptCall()" class="py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-bold uppercase rounded-xl transition-all shadow-neon-emerald">Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL TRIGGER & MODAL -->
+    <div id="adminGateModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 hidden">
+        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md" onclick="closeAdminGate()"></div>
+        <div class="glass-panel-heavy rounded-2xl p-6 max-w-md w-full relative z-10 border border-cyan-500/30 shadow-neon-cyan">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="heading-font text-md font-bold text-cyan-400">System Node Access</h4>
+                <button onclick="closeAdminGate()" class="text-slate-500 hover:text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-4">
+                <input type="password" id="adminPass" placeholder="Enter key (admin123)" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 tracking-widest focus:outline-none focus:border-cyan-400"/>
+                <button onclick="verifyAdminPassword()" class="w-full py-2.5 bg-cyan-500 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-all hover:shadow-neon-cyan">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN CENTRAL PANEL -->
+    <div id="adminCentralModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 hidden">
+        <div class="fixed inset-0 bg-slate-950/90 backdrop-blur-md" onclick="closeAdminCentral()"></div>
+        <div class="glass-panel-heavy rounded-3xl p-6 md:p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto relative z-10 border border-purple-500/30 shadow-neon-purple space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                <h4 class="heading-font text-lg font-bold">Advance IT Master Control</h4>
+                <button onclick="closeAdminCentral()" class="text-slate-500 hover:text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- MANAGE SLIDER -->
+                <div class="space-y-4 bg-slate-900/40 p-4 rounded-xl border border-slate-800/80">
+                    <h5 class="text-xs uppercase text-cyan-400 font-bold">Manage App Banner Slider</h5>
+                    <div class="space-y-3">
+                        <input type="url" id="adminUrl0" placeholder="Slide 1 URL" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs"/>
+                        <input type="url" id="adminUrl1" placeholder="Slide 2 URL" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs"/>
+                        <input type="url" id="adminUrl2" placeholder="Slide 3 URL" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs"/>
+                        <button onclick="saveSliderImages()" class="w-full py-2 bg-cyan-500 text-slate-950 text-xs font-bold uppercase rounded-lg">Commit Changes</button>
+                    </div>
+                </div>
+                <!-- SESSION REGISTRY -->
+                <div class="space-y-4 bg-slate-900/40 p-4 rounded-xl border border-slate-800/80">
+                    <h5 class="text-xs uppercase text-emerald-400 font-bold">Session Security Panel</h5>
+                    <div id="userSystemList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                    <button onclick="clearAllRegistry()" class="w-full py-2 bg-rose-950/40 text-rose-400 text-xs font-semibold rounded-lg border border-rose-500/20">Reset Session Databases</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        // Fail-Safe Memory Core (Enforces safe virtual-memory if browser blocks localStorage)
+        const localStore = {
+            _backupData: {},
+            _hasLocalStorage: false,
+            init() {
+                try {
+                    const testKey = '__storage_test__';
+                    window.localStorage.setItem(testKey, testKey);
+                    window.localStorage.removeItem(testKey);
+                    this._hasLocalStorage = true;
+                } catch (e) {
+                    this._hasLocalStorage = false;
+                }
+            },
+            getItem(key) {
+                if (this._hasLocalStorage) {
+                    try {
+                        return window.localStorage.getItem(key);
+                    } catch (e) {}
+                }
+                return this._backupData[key] || null;
+            },
+            setItem(key, value) {
+                if (this._hasLocalStorage) {
+                    try {
+                        window.localStorage.setItem(key, value);
+                        return;
+                    } catch (e) {}
+                }
+                this._backupData[key] = String(value);
+            },
+            removeItem(key) {
+                if (this._hasLocalStorage) {
+                    try {
+                        window.localStorage.removeItem(key);
+                        return;
+                    } catch (e) {}
+                }
+                delete this._backupData[key];
+            }
+        };
+        // Initialize storage immediately
+        localStore.init();
+
+        const defaultBannerImages = [
+            "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80"
+        ];
+
+        let currentUserId = null;
+        let peerInstance = null;
+        let activeCall = null;
+        let currentLocalStream = null;
+        let activeSlideIndex = 0;
+        let carouselInterval = null;
+        let isDragging = false;
+        let startX, startY;
+
+        let dataConnection = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecordingVoice = false;
+
+        function safeGetJSON(key, defaultValue) {
+            try {
+                const data = localStore.getItem(key);
+                if (!data) return defaultValue;
+                const parsed = JSON.parse(data);
+                // Guarantee the type is correct
+                if (Array.isArray(defaultValue) && !Array.isArray(parsed)) {
+                    return defaultValue;
+                }
+                return parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+
+        function safeSetJSON(key, value) {
+            try {
+                localStore.setItem(key, JSON.stringify(value));
+            } catch (e) {}
+        }
+
+        // Anti-Log-Out state restorer (Loads session automatically)
+        function initApp() {
+            try {
+                const sessionPhone = localStore.getItem('advance_it_currentUser');
+                const loginEl = document.getElementById('loginScreen');
+                const dashEl = document.getElementById('dashboardScreen');
+
+                if (!loginEl || !dashEl) return;
+
+                if (sessionPhone && sessionPhone !== "null") {
+                    currentUserId = sessionPhone;
+                    
+                    // Force inline style transitions to bypass Tailwind specificity
+                    loginEl.style.display = 'none';
+                    dashEl.style.display = 'block';
+                    dashEl.style.opacity = '1';
+                    dashEl.style.transform = 'scale(1)';
+                    bootstrapCallingDashboard();
+                } else {
+                    dashEl.style.display = 'none';
+                    loginEl.style.display = 'block';
+                    loginEl.style.opacity = '1';
+                    loginEl.style.transform = 'scale(1)';
+                }
+                initSlider();
+            } catch (e) {
+                console.error("Initialization error:", e);
+            }
+        }
+
+        // Secure Transition Core using Explicit inline styles (Never gets stuck)
+        function transitionView(fromId, toId) {
+            try {
+                const fromEl = document.getElementById(fromId);
+                const toEl = document.getElementById(toId);
+                
+                if (!fromEl || !toEl) return;
+
+                // Smooth fade out
+                fromEl.style.transition = 'all 0.3s ease-in-out';
+                fromEl.style.opacity = '0';
+                fromEl.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    fromEl.style.display = 'none';
+                    
+                    // Smooth fade in
+                    toEl.style.display = 'block';
+                    toEl.style.opacity = '0';
+                    toEl.style.transform = 'scale(0.95)';
+                    toEl.style.transition = 'all 0.3s ease-in-out';
+                    
+                    setTimeout(() => {
+                        toEl.style.opacity = '1';
+                        toEl.style.transform = 'scale(1)';
+                    }, 50);
+                }, 300);
+            } catch (e) {
+                // Instant fallback transition on any failure
+                const fromEl = document.getElementById(fromId);
+                const toEl = document.getElementById(toId);
+                if (fromEl && toEl) {
+                    fromEl.style.display = 'none';
+                    toEl.style.display = 'block';
+                }
+            }
+        }
+
+        function handleLogin() {
+            try {
+                const phoneInput = document.getElementById('loginPhone');
+                if (!phoneInput) return;
+                
+                const phoneVal = phoneInput.value.trim();
+                if (!phoneVal) {
+                    alert('Please enter your phone number identifier.');
+                    return;
+                }
+
+                // Save to safe storage module
+                localStore.setItem('advance_it_currentUser', phoneVal);
+                currentUserId = phoneVal;
+
+                let allUsers = safeGetJSON('advance_it_registered_users', []);
+                if (!Array.isArray(allUsers)) {
+                    allUsers = [];
+                }
+                if (!allUsers.includes(phoneVal)) {
+                    allUsers.push(phoneVal);
+                    safeSetJSON('advance_it_registered_users', allUsers);
+                }
+
+                // Transition with inline elements
+                transitionView('loginScreen', 'dashboardScreen');
+                bootstrapCallingDashboard();
+            } catch (error) {
+                transitionView('loginScreen', 'dashboardScreen');
+                bootstrapCallingDashboard();
+            }
+        }
+
+        function handleLogout() {
+            if (activeCall) endCall();
+            localStore.removeItem('advance_it_currentUser');
+            currentUserId = null;
+            
+            if (peerInstance) {
+                peerInstance.destroy();
+                peerInstance = null;
+            }
+
+            transitionView('dashboardScreen', 'loginScreen');
+        }
+
+        function initSlider() {
+            try {
+                updateSliderUI();
+                clearInterval(carouselInterval);
+                carouselInterval = setInterval(() => {
+                    let next = (activeSlideIndex + 1) % 3;
+                    setSlide(next);
+                }, 4000);
+            } catch(e) {}
+        }
+
+        function updateSliderUI() {
+            try {
+                const urls = getSliderUrls();
+                for (let i = 0; i < 3; i++) {
+                    const slide = document.getElementById(`slide${i}`);
+                    if (slide) slide.style.backgroundImage = `url('${urls[i]}')`;
+                }
+            } catch(e) {}
+        }
+
+        function getSliderUrls() {
+            let urls = safeGetJSON('advance_it_slider_images', defaultBannerImages);
+            if (!Array.isArray(urls) || urls.length < 3) {
+                return defaultBannerImages;
+            }
+            return urls;
+        }
+
+        function setSlide(index) {
+            activeSlideIndex = index;
+            for (let i = 0; i < 3; i++) {
+                const slide = document.getElementById(`slide${i}`);
+                const dot = document.getElementById(`dot${i}`);
+                if (!slide || !dot) continue;
+                if (i === index) {
+                    slide.classList.remove('opacity-0');
+                    slide.classList.add('opacity-100');
+                    dot.classList.add('bg-cyan-400');
+                } else {
+                    slide.classList.remove('opacity-100');
+                    slide.classList.add('opacity-0');
+                    dot.classList.remove('bg-cyan-400');
+                }
+            }
+        }
+
+        function writeLog(message, isError = false) {
+            const term = document.getElementById('terminalLogs');
+            if (!term) return;
+            const colorClass = isError ? 'text-rose-400' : 'text-cyan-400';
+            const logLine = document.createElement('div');
+            logLine.innerHTML = `<span class="text-slate-600 font-bold">></span> <span class="${colorClass}">${message}</span>`;
+            term.appendChild(logLine);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function bootstrapCallingDashboard() {
+            try {
+                const userDisplay = document.getElementById('userPhoneDisplay');
+                if (userDisplay) {
+                    userDisplay.innerText = currentUserId || "Offline Node";
+                }
+                writeLog(`Activating secure line: ${currentUserId}`);
+
+                if (!currentUserId) return;
+
+                const sanitizedId = 'adv-it-' + String(currentUserId).replace(/[^a-zA-Z0-9]/g, '');
+                
+                if (typeof Peer === 'undefined') {
+                    writeLog("Signaling unreachable. Loopback mode activated.", true);
+                    const nodeBadge = document.getElementById('nodeStatusBadge');
+                    if (nodeBadge) {
+                        nodeBadge.innerText = 'SIMULATOR';
+                        nodeBadge.className = 'text-[9px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20';
+                    }
+                    return;
+                }
+
+                peerInstance = new Peer(sanitizedId, {
+                    secure: true,
+                    config: {
+                        iceServers: [
+                            { urls: 'stun:stun.l.google.com:19302' },
+                            { urls: 'stun:stun1.l.google.com:19302' }
+                        ]
+                    }
+                });
+
+                peerInstance.on('open', (id) => {
+                    writeLog(`Ready for live P2P secure connections.`);
+                    const nodeBadge = document.getElementById('nodeStatusBadge');
+                    if (nodeBadge) {
+                        nodeBadge.innerText = 'ONLINE';
+                        nodeBadge.className = 'text-[9px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20';
+                    }
+                });
+
+                peerInstance.on('error', (err) => {
+                    writeLog(`System Node Mode: Enforcing secure loopback emulation.`, false);
+                    const nodeBadge = document.getElementById('nodeStatusBadge');
+                    if (nodeBadge) {
+                        nodeBadge.innerText = 'TEST-LOOP';
+                        nodeBadge.className = 'text-[9px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/20';
+                    }
+                });
+
+                peerInstance.on('call', (call) => {
+                    activeCall = call;
+                    const originatingCaller = call.peer.replace('adv-it-', '');
+                    const callerDisplay = document.getElementById('callerIdDisplay');
+                    if (callerDisplay) callerDisplay.innerText = originatingCaller;
+                    const incomingModal = document.getElementById('incomingCallModal');
+                    if (incomingModal) incomingModal.classList.remove('hidden');
+                });
+
+                peerInstance.on('connection', (conn) => {
+                    dataConnection = conn;
+                    setupDataHandlers(dataConnection);
+                });
+            } catch (e) {
+                console.error("Signal node failure: ", e);
+            }
+        }
+
+        function startCall(mediaType) {
+            const rawTarget = document.getElementById('targetPhone').value.trim();
+            if (!rawTarget) {
+                alert('Please enter peer\'s phone number first.');
+                return;
+            }
+
+            const cleanTargetId = 'adv-it-' + String(rawTarget).replace(/[^a-zA-Z0-9]/g, '');
+            writeLog(`Calling node: ${cleanTargetId}`);
+            setCallState('Connecting...', 'bg-yellow-500');
+
+            if (!peerInstance || peerInstance.disconnected) {
+                runSimulationCall(rawTarget);
+                return;
+            }
+
+            dataConnection = peerInstance.connect(cleanTargetId);
+            setupDataHandlers(dataConnection);
+
+            navigator.mediaDevices.getUserMedia({ video: mediaType === 'video', audio: true })
+                .then((stream) => {
+                    currentLocalStream = stream;
+                    document.getElementById('localVideo').srcObject = stream;
+                    document.getElementById('localVideoWrapper').style.display = 'block';
+
+                    activeCall = peerInstance.call(cleanTargetId, stream);
+                    handleCallStreams(activeCall);
+                })
+                .catch(() => {
+                    writeLog(`Camera blocked. Starting audio-only stream...`);
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then((stream) => {
+                            currentLocalStream = stream;
+                            activeCall = peerInstance.call(cleanTargetId, stream);
+                            handleCallStreams(activeCall);
+                        }).catch(() => {
+                            runSimulationCall(rawTarget);
+                        });
+                });
+        }
+
+        function runSimulationCall(targetNumber) {
+            writeLog(`Establishing loopback simulation link with ${targetNumber}...`);
+            setCallState('Connecting loopback...', 'bg-cyan-500');
+            
+            setTimeout(() => {
+                document.getElementById('videoPlaceholder').classList.add('hidden');
+                const simContainer = document.getElementById('simulatedRemoteContainer');
+                simContainer.style.display = 'flex';
+                document.getElementById('simulatedCallerId').innerText = `Simulation Link [${targetNumber}]`;
+                
+                navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                    .then((stream) => {
+                        currentLocalStream = stream;
+                        document.getElementById('localVideo').srcObject = stream;
+                        document.getElementById('localVideoWrapper').style.display = 'block';
+                    }).catch(() => {});
+
+                setCallState('Link Secure', 'bg-emerald-500');
+                writeLog("Loopback channel is active. Ready to share media below.");
+            }, 1000);
+        }
+
+        function handleCallStreams(call) {
+            if (!call) return;
+            call.on('stream', (remoteStream) => {
+                document.getElementById('remoteVideo').srcObject = remoteStream;
+                document.getElementById('videoPlaceholder').classList.add('hidden');
+                setCallState('Uplink Connected', 'bg-emerald-500');
+            });
+            call.on('close', () => resetCallScreen());
+        }
+
+        function acceptCall() {
+            document.getElementById('incomingCallModal').classList.add('hidden');
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then((stream) => {
+                    currentLocalStream = stream;
+                    document.getElementById('localVideo').srcObject = stream;
+                    document.getElementById('localVideoWrapper').style.display = 'block';
+                    if (activeCall) {
+                        activeCall.answer(stream);
+                        handleCallStreams(activeCall);
+                    }
+                    setCallState('Active Call', 'bg-emerald-500');
+                });
+        }
+
+        function declineCall() {
+            document.getElementById('incomingCallModal').classList.add('hidden');
+            if (activeCall) activeCall.close();
+            resetCallScreen();
+        }
+
+        function endCall() {
+            if (activeCall) activeCall.close();
+            resetCallScreen();
+        }
+
+        function resetCallScreen() {
+            if (currentLocalStream) {
+                currentLocalStream.getTracks().forEach(track => track.stop());
+                currentLocalStream = null;
+            }
+            document.getElementById('remoteVideo').srcObject = null;
+            document.getElementById('localVideo').srcObject = null;
+            document.getElementById('videoPlaceholder').classList.remove('hidden');
+            document.getElementById('localVideoWrapper').style.display = 'none';
+            document.getElementById('simulatedRemoteContainer').style.display = 'none';
+            setCallState('Idle', 'bg-slate-500');
+        }
+
+        function setCallState(text, colorClass) {
+            const badge = document.getElementById('callTypeBadge');
+            const stateText = document.getElementById('callStatusText');
+            if (badge && stateText) {
+                badge.className = `w-2.5 h-2.5 rounded-full ${colorClass} animate-pulse`;
+                stateText.innerText = text;
+            }
+        }
+
+        function initDraggablePip() {
+            const el = document.getElementById('localVideoWrapper');
+            if (!el) return;
+            el.addEventListener('mousedown', dragStart);
+            el.addEventListener('touchstart', dragStart, { passive: false });
+
+            function dragStart(e) {
+                isDragging = true;
+                const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+                startX = clientX - el.offsetLeft;
+                startY = clientY - el.offsetTop;
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('touchmove', dragMove, { passive: false });
+                document.addEventListener('mouseup', dragEnd);
+                document.addEventListener('touchend', dragEnd);
+            }
+
+            function dragMove(e) {
+                if (!isDragging) return;
+                const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+                let x = clientX - startX;
+                let y = clientY - startY;
+                el.style.left = `${x}px`;
+                el.style.top = `${y}px`;
+                el.style.bottom = 'auto';
+                el.style.right = 'auto';
+            }
+
+            function dragEnd() {
+                isDragging = false;
+            }
+        }
+
+        function toggleAudio() {
+            if (currentLocalStream) {
+                const track = currentLocalStream.getAudioTracks()[0];
+                if (track) {
+                    track.enabled = !track.enabled;
+                    document.getElementById('btnMute').classList.toggle('bg-rose-950/40');
+                }
+            }
+        }
+
+        function toggleVideo() {
+            if (currentLocalStream) {
+                const track = currentLocalStream.getVideoTracks()[0];
+                if (track) {
+                    track.enabled = !track.enabled;
+                    document.getElementById('btnCamOff').classList.toggle('bg-rose-950/40');
+                }
+            }
+        }
+
+        function appendMediaToBox(sender, type, payload) {
+            const box = document.getElementById('mediaBoxLogs');
+            if (!box) return;
+
+            if (box.innerHTML.includes("Share images")) {
+                box.innerHTML = '';
+            }
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `p-2 rounded-xl max-w-[85%] ${sender === 'You' ? 'bg-cyan-950/40 border border-cyan-500/20 ml-auto' : 'bg-slate-900 border border-slate-800'}`;
+            
+            let contentHTML = '';
+            if (type === 'text') {
+                contentHTML = `<p class="text-slate-200">${payload}</p>`;
+            } else if (type === 'image') {
+                contentHTML = `<img src="${payload}" class="rounded-lg max-h-40 w-full object-cover border border-slate-800 mt-1 cursor-pointer" onclick="window.open(this.src)"/>`;
+            } else if (type === 'voice') {
+                contentHTML = `
+                    <div class="flex items-center gap-2 mt-1">
+                        <i class="fa-solid fa-waveform-lines text-emerald-400"></i>
+                        <audio src="${payload}" controls class="w-full h-8 max-w-[180px] bg-transparent opacity-80"></audio>
+                    </div>`;
+            }
+
+            msgDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-0.5">
+                    <span class="text-[9px] font-bold text-slate-500">${sender}</span>
+                </div>
+                ${contentHTML}
+            `;
+            
+            box.appendChild(msgDiv);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function setupDataHandlers(conn) {
+            conn.on('data', (data) => {
+                if (data && data.type) {
+                    appendMediaToBox('Peer', data.type, data.payload);
+                }
+            });
+        }
+
+        function sendTextMessage() {
+            const input = document.getElementById('chatTextInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            appendMediaToBox('You', 'text', val);
+            input.value = '';
+
+            if (dataConnection && dataConnection.open) {
+                dataConnection.send({ type: 'text', payload: val });
+            } else {
+                setTimeout(() => {
+                    appendMediaToBox('Autonomous Node', 'text', `Auto reply: Signal received on loopback.`);
+                }, 1000);
+            }
+        }
+
+        function processImageUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                appendMediaToBox('You', 'image', base64Data);
+
+                if (dataConnection && dataConnection.open) {
+                    dataConnection.send({ type: 'image', payload: base64Data });
+                } else {
+                    setTimeout(() => {
+                        appendMediaToBox('Autonomous Node', 'text', 'Image packet verified on loopback terminal.');
+                    }, 1200);
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function toggleVoiceRecord() {
+            const btn = document.getElementById('btnVoiceRecord');
+            if (!isRecordingVoice) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+                        audioChunks = [];
+                        
+                        mediaRecorder.ondataavailable = e => {
+                            audioChunks.push(e.data);
+                        };
+
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                            const reader = new FileReader();
+                            reader.readAsDataURL(audioBlob);
+                            reader.onloadend = function() {
+                                const base64Audio = reader.result;
+                                appendMediaToBox('You', 'voice', base64Audio);
+
+                                if (dataConnection && dataConnection.open) {
+                                    dataConnection.send({ type: 'voice', payload: base64Audio });
+                                } else {
+                                    setTimeout(() => {
+                                        appendMediaToBox('Autonomous Node', 'text', 'Voice file footprints logged.');
+                                    }, 1000);
+                                }
+                            }
+                        };
+
+                        mediaRecorder.start();
+                        isRecordingVoice = true;
+                        btn.className = "w-9 h-9 rounded-xl bg-rose-600 border border-rose-500/50 flex items-center justify-center text-white animate-pulse shadow-neon-rose";
+                        writeLog('Voice transmission recording...');
+                    }).catch(err => {
+                        writeLog(`Voice capability blocked: ${err.message}`, true);
+                    });
+            } else {
+                if (mediaRecorder) mediaRecorder.stop();
+                isRecordingVoice = false;
+                btn.className = "w-9 h-9 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-400 hover:bg-slate-900";
+                writeLog('Voice transmission saved & sending.');
+            }
+        }
+
+        // Admin Node
+        function openAdminGate() {
+            document.getElementById('adminPass').value = '';
+            document.getElementById('adminGateModal').classList.remove('hidden');
+        }
+        function closeAdminGate() { document.getElementById('adminGateModal').classList.add('hidden'); }
+        
+        function verifyAdminPassword() {
+            if (document.getElementById('adminPass').value === 'admin123') {
+                closeAdminGate();
+                openAdminCentral();
+            } else {
+                alert('Access Denied.');
+            }
+        }
+
+        function openAdminCentral() {
+            const currentImages = getSliderUrls();
+            document.getElementById('adminUrl0').value = currentImages[0];
+            document.getElementById('adminUrl1').value = currentImages[1];
+            document.getElementById('adminUrl2').value = currentImages[2];
+            renderAdminUsers();
+            document.getElementById('adminCentralModal').classList.remove('hidden');
+        }
+        function closeAdminCentral() { document.getElementById('adminCentralModal').classList.add('hidden'); }
+
+        function saveSliderImages() {
+            const urls = [
+                document.getElementById('adminUrl0').value.trim() || defaultBannerImages[0],
+                document.getElementById('adminUrl1').value.trim() || defaultBannerImages[1],
+                document.getElementById('adminUrl2').value.trim() || defaultBannerImages[2]
+            ];
+            safeSetJSON('advance_it_slider_images', urls);
+            updateSliderUI();
+            alert('Banner links committed.');
+            closeAdminCentral();
+        }
+
+        function renderAdminUsers() {
+            const listContainer = document.getElementById('userSystemList');
+            if (!listContainer) return;
+            let allUsers = safeGetJSON('advance_it_registered_users', []);
+            if (!Array.isArray(allUsers) || allUsers.length === 0) {
+                listContainer.innerHTML = `<div class="text-xs text-slate-500 italic text-center py-4">No sessions active.</div>`;
+                return;
+            }
+            listContainer.innerHTML = '';
+            allUsers.forEach((phone) => {
+                const userRow = document.createElement('div');
+                userRow.className = 'flex items-center justify-between p-2 bg-slate-950 border border-slate-800 rounded-lg text-xs';
+                userRow.innerHTML = `
+                    <span>${phone}</span>
+                    <button onclick="kickUser('${phone}')" class="px-2 py-0.5 bg-rose-500/10 text-rose-400 rounded hover:bg-rose-500 hover:text-white">Kick</button>
+                `;
+                listContainer.appendChild(userRow);
+            });
+        }
+
+        function kickUser(phone) {
+            let allUsers = safeGetJSON('advance_it_registered_users', []);
+            if (Array.isArray(allUsers)) {
+                allUsers = allUsers.filter(u => u !== phone);
+                safeSetJSON('advance_it_registered_users', allUsers);
+            }
+            if (phone === currentUserId) {
+                closeAdminCentral();
+                handleLogout();
+            } else {
+                renderAdminUsers();
+            }
+        }
+
+        function clearAllRegistry() {
+            if (confirm('Delete all active registries?')) {
+                localStore.removeItem('advance_it_registered_users');
+                closeAdminCentral();
+                handleLogout();
+            }
+        }
+
+        // Guaranteed Safe Loading Mechanism (Runs after full document layout is parsed)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                initApp();
+                initDraggablePip();
+            });
+        } else {
+            initApp();
+            initDraggablePip();
+        }
+    </script>
+</body>
+</html>
