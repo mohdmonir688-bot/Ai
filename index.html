@@ -89,8 +89,8 @@
 
     <main class="flex-grow flex items-center justify-center p-4 md:p-8">
         
-        <!-- 1. VIP GLASSMORPHISM LOGIN SCREEN (Initially Visible) -->
-        <div id="loginScreen" class="w-full max-w-md glass-panel rounded-3xl p-8 relative overflow-hidden shadow-neon-purple transition-all duration-500 ease-in-out transform opacity-100 scale-100">
+        <!-- 1. VIP GLASSMORPHISM LOGIN SCREEN (Hidden by default, shown by JS dynamically to avoid flickering) -->
+        <div id="loginScreen" class="w-full max-w-md glass-panel rounded-3xl p-8 relative overflow-hidden shadow-neon-purple transition-all duration-500 ease-in-out transform hidden opacity-0 scale-95">
             <div class="absolute -top-12 -left-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl"></div>
             <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
             
@@ -106,7 +106,8 @@
                 <p class="text-slate-400 text-xs tracking-widest mt-1 uppercase font-semibold">VIP Calling System</p>
             </div>
 
-            <form id="loginForm" class="space-y-6 relative z-10" onsubmit="handleLogin(event)">
+            <!-- Removed traditional <form> to completely prevent native submit-reloads on GitHub Pages -->
+            <div class="space-y-6 relative z-10">
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Secure Phone Number</label>
                     <div class="relative">
@@ -117,21 +118,22 @@
                             type="tel" 
                             id="loginPhone" 
                             required 
-                            pattern="^[0-9+ ]{5,15}$"
-                            placeholder="+1 234 567 890" 
+                            placeholder="Enter phone number" 
+                            onkeydown="if(event.key === 'Enter') handleLogin()"
                             class="w-full pl-11 pr-4 py-3.5 bg-slate-950/80 border border-slate-800 rounded-xl focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 text-slate-100 transition-all placeholder:text-slate-600"
                         />
                     </div>
-                    <p class="text-[10px] text-slate-500 mt-2">Enter your digits to start instantly. Persistent authentication active.</p>
+                    <p class="text-[10px] text-slate-500 mt-2">Enter your identity number to enter the control module.</p>
                 </div>
 
                 <button 
-                    type="submit" 
+                    type="button"
+                    onclick="handleLogin()"
                     class="w-full py-4 px-6 bg-gradient-to-r from-cyan-500 via-purple-600 to-emerald-500 text-slate-950 font-bold uppercase tracking-wider rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-neon-cyan hover:shadow-neon-purple focus:outline-none"
                 >
                     Authenticate Identity <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>
                 </button>
-            </form>
+            </div>
         </div>
 
         <!-- 2. ULTIMATE DASHBOARD FRAMEWORK (Hidden by Default) -->
@@ -275,32 +277,30 @@
                     </div>
 
                     <div class="absolute inset-0 bg-slate-950/90 flex items-center justify-center z-0">
+                        <!-- Remote Video Feed -->
                         <video id="remoteVideo" class="w-full h-full object-cover rounded-2xl" autoplay playsinline></video>
                         
+                        <!-- Simulated video loopback element to guarantee video testing works in all cases -->
+                        <div id="simulatedRemoteContainer" class="absolute inset-0 hidden items-center justify-center bg-slate-950/90 z-10">
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15),transparent_70%)] animate-pulse"></div>
+                            <div class="text-center space-y-4">
+                                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-[2px] mx-auto shadow-neon-cyan">
+                                    <div class="w-full h-full bg-slate-950 rounded-full flex items-center justify-center text-3xl text-cyan-400">
+                                        <i class="fa-solid fa-circle-nodes animate-spin-slow"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-md font-mono text-cyan-400 tracking-wider">LOOPBACK CONNECTED</p>
+                                    <p id="simulatedCallerId" class="text-xs text-slate-400 font-mono mt-1">Autonomous Test Stream</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Empty Stream Placeholder State -->
                         <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 text-slate-500 text-center p-6 space-y-4">
                             <div class="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-600 shadow-inner">
                                 <i class="fa-solid fa-eye-slash text-2xl"></i>
                             </div>
                             <div>
                                 <p class="text-sm font-semibold text-slate-400">Secure Screen Stream Offline</p>
-                                <p class="text-xs text-slate-600 mt-1 max-w-sm">No active video uplink. Ready to securely process WebRTC calls on your local nodes.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- FLOATING PICTURE-IN-PICTURE LOCAL USER CAMERA VIEW -->
-                    <div 
-                        id="localVideoWrapper" 
-                        class="absolute bottom-6 right-6 w-32 h-44 md:w-44 md:h-60 rounded-xl overflow-hidden glass-panel border border-cyan-400/40 shadow-neon-cyan z-30 cursor-grab active:cursor-grabbing select-none"
-                    >
-                        <div class="absolute top-2 left-2 bg-slate-950/80 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider font-bold text-cyan-400 z-10 border border-white/5 pointer-events-none">
-                            Local View
-                        </div>
-                        <video id="localVideo" class="w-full h-full object-cover" autoplay muted playsinline></video>
-                    </div>
-
-                    <div id="callControls" class="relative z-10 mt-auto flex justify-center items-center gap-4 bg-slate-950/60 backdrop-blur-md border border-slate-800 max-w-sm mx-auto p-3.5 rounded-2xl transition-all duration-300 hover:scale-[1.02] shadow-neon-purple pointer-events-auto">
-                        <button onclick="toggleAudio()" id="btnMute" class="w-11 h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-cyan-400 transition-all active:scale-95" title="Toggle Mic">
-                            <i class="fa-solid fa-microphone text-base"></i>
-                        </button>
-        
+                                <p class="text-xs text-slate-600 mt-1 max-w-sm">No active vi
